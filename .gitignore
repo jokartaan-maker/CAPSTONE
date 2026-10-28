@@ -1,0 +1,31 @@
+# Environment variables and secrets
+.env
+.env.*
+!.env.example
+
+# Dependencies
+/node_modules/
+/vendor/
+
+# Build outputs
+/dist/
+/build/
+
+# Logs
+*.log
+npm-debug.log*
+
+# Operating system files
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Editors
+.vscode/
+.idea/
+
+# Laravel generated files
+/storage/*.key
+/storage/logs/*
+/bootstrap/cache/*
+/public/storage
