@@ -20,6 +20,8 @@ A web-based platform designed to organize and manage the graduation project life
 - Anas Omar Al-Khatib — Backend
 - Raneem Abdo Al-Arabi — Frontend
 - Ahmad Halabi — Frontend
+- leen Halabi _ Frontend
+  
 
 ### Project Status
 Planning and initial development setup.
