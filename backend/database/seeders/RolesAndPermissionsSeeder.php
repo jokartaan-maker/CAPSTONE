@@ -10,11 +10,11 @@ class RolesAndPermissionsSeeder extends Seeder
 {
     public function run(): void
     {
-     
+
         $roles = [
             'student'    => ['طالب', 'يختار الفكرة ويشكّل الفريق ويسلّم التقارير'],
             'supervisor' => ['مشرف', 'يطرح الأفكار ويتابع الفرق ويقيّمها'],
-            'admin'      => ['إدارة / لجنة علمية', 'يعتمد الأفكار ويدير المستخدمين والأرشيف'],
+            'admin'      => ['إدارة / لجنة علمية', 'يعتمد الأفكار ويدير المستخدمين والأرشيف والمواعيد'],
         ];
 
         foreach ($roles as $name => [$display, $description]) {
@@ -24,7 +24,7 @@ class RolesAndPermissionsSeeder extends Seeder
             );
         }
 
-      
+       
         $permissions = [
             'ideas.browse'          => 'تصفح الأفكار المعتمدة والبحث فيها',
             'ideas.create'          => 'طرح فكرة مشروع',
@@ -39,7 +39,9 @@ class RolesAndPermissionsSeeder extends Seeder
             'feedback.create'       => 'التعليق على الملفات وإضافة الملاحظات',
             'evaluations.team'      => 'تقييم أداء الفريق',
             'evaluations.member'    => 'تقييم فردي لعضو الفريق',
-            'discussions.manage'    => 'تحديد مواعيد المناقشات',
+            'discussions.view'      => 'عرض مواعيد المناقشات',
+            'discussions.manage'    => 'تحديد مواعيد المناقشات وتعديلها',
+            'deadlines.manage'      => 'تحديد مواعيد التسليمات المرحلية',
             'archive.manage'        => 'الأرشفة',
             'reports.view'          => 'الإحصائيات والتقارير',
             'users.manage'          => 'إدارة المستخدمين وتعيين المشرفين',
@@ -56,18 +58,18 @@ class RolesAndPermissionsSeeder extends Seeder
             Permission::updateOrCreate(['name' => $name], ['display_name' => $display]);
         }
 
-      
         $studentOnly = ['teams.create', 'join_requests.create', 'submissions.upload'];
 
         $map = [
             'student' => [
                 'ideas.browse', 'teams.create', 'join_requests.create',
-                'submissions.upload', 'tasks.view', 'tasks.create', 'tasks.assign',
+                'submissions.upload', 'discussions.view',
+                'tasks.view', 'tasks.create', 'tasks.assign',
             ],
             'supervisor' => [
                 'ideas.browse', 'ideas.create', 'ideas.precheck',
                 'join_requests.decide', 'feedback.create',
-                'evaluations.team', 'evaluations.member', 'discussions.manage',
+                'evaluations.team', 'evaluations.member', 'discussions.view',
                 'tasks.view', 'tasks.create', 'tasks.assign', 'tasks.evaluate',
             ],
             'admin' => array_values(array_diff(array_keys($permissions), $studentOnly)),
