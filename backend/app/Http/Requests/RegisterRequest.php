@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Enums\RequestedRole;
 use Illuminate\Foundation\Http\FormRequest;
 
 class RegisterRequest extends FormRequest
@@ -18,7 +19,7 @@ class RegisterRequest extends FormRequest
             'email' => ['required', 'email', 'max:100', 'unique:users,email'],
             'password' => ['required', 'string', 'min:8', 'confirmed'],
             'phone' => ['nullable', 'string', 'max:20'],
-            'role' => ['required', 'in:student,supervisor,committee'],
+            'role' => ['required', RequestedRole::rule()],
         ];
     }
 }

@@ -10,7 +10,12 @@ class DatabaseSeeder extends Seeder
     {
         $this->call([
             RolesAndPermissionsSeeder::class,
+            SystemSettingsSeeder::class,
             AdminUserSeeder::class,
         ]);
+
+        if (app()->environment('local')) {
+            $this->call(DemoDataSeeder::class);
+        }
     }
 }

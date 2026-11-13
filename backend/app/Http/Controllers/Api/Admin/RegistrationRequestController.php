@@ -2,24 +2,21 @@
 
 namespace App\Http\Controllers\Api\Admin;
 
+use App\Enums\RegistrationStatus;
 use App\Http\Controllers\Controller;
+use App\Models\AuditLog;
 use App\Models\Role;
 use App\Models\User;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
+/** UC-47: الموافقة على طلبات تسجيل المشرفين وأعضاء اللجنة العلمية */
 class RegistrationRequestController extends Controller
 {
-    // الدور المطلوب عند التسجيل -> الدور الفعلي في النظام
-    private const ROLE_MAP = [
-        'student' => 'student',
-        'supervisor' => 'supervisor',
-        'committee' => 'admin',
-    ];
-
     public function index(): JsonResponse
     {
-        $requests = User::where('registration_status', 'pending')
+        $requests = User::where('registration_status', RegistrationStatus::Pending)
             ->orderBy('created_at')
             ->paginate(20)
             ->through(fn (User $user) => [
@@ -27,7 +24,8 @@ class RegistrationRequestController extends Controller
                 'name' => $user->name,
                 'email' => $user->email,
                 'phone' => $user->phone,
-                'requested_role' => $user->requested_role,
+                'requested_role' => $user->requested_role?->value,
+                'requested_role_label' => $user->requested_role?->label(),
                 'created_at' => $user->created_at,
             ]);
 
@@ -36,37 +34,44 @@ class RegistrationRequestController extends Controller
 
     public function approve(User $user): JsonResponse
     {
-        if ($user->registration_status !== 'pending') {
+        if ($user->registration_status !== RegistrationStatus::Pending) {
             return response()->json(['message' => 'هذا الطلب ليس قيد الانتظار'], 422);
         }
 
-        $roleName = self::ROLE_MAP[$user->requested_role] ?? null;
+        // الدور المطلوب يطابق اسم الدور في جدول roles مباشرة: student / supervisor / committee
+        $role = Role::where('name', $user->requested_role?->value)->first();
 
-        if (! $roleName) {
+        if (! $role) {
             return response()->json(['message' => 'الدور المطلوب غير معروف'], 422);
         }
 
-        DB::transaction(function () use ($user, $roleName) {
+        DB::transaction(function () use ($user, $role) {
             $user->update([
                 'is_active' => true,
-                'registration_status' => 'approved',
+                'registration_status' => RegistrationStatus::Approved,
             ]);
 
-            $user->roles()->syncWithoutDetaching([
-                Role::where('name', $roleName)->firstOrFail()->id,
-            ]);
+            $user->roles()->syncWithoutDetaching([$role->id]);
+
+            AuditLog::record('registration.approved', $user, ['registration_status' => 'pending'], ['registration_status' => 'approved', 'role' => $role->name]);
         });
 
         return response()->json(['message' => 'تمت الموافقة على الحساب']);
     }
 
-    public function reject(User $user): JsonResponse
+    public function reject(Request $request, User $user): JsonResponse
     {
-        if ($user->registration_status !== 'pending') {
+        $data = $request->validate(['reason' => ['required', 'string', 'max:500']]);
+
+        if ($user->registration_status !== RegistrationStatus::Pending) {
             return response()->json(['message' => 'هذا الطلب ليس قيد الانتظار'], 422);
         }
 
-        $user->update(['registration_status' => 'rejected']);
+        DB::transaction(function () use ($user, $data) {
+            $user->update(['registration_status' => RegistrationStatus::Rejected]);
+
+            AuditLog::record('registration.rejected', $user, ['registration_status' => 'pending'], ['registration_status' => 'rejected', 'reason' => $data['reason']]);
+        });
 
         return response()->json(['message' => 'تم رفض الطلب']);
     }

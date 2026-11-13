@@ -7,9 +7,14 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class PasswordResetToken extends Model
 {
-    public $timestamps = false;
+    const UPDATED_AT = null;
 
-    protected $fillable = ['user_id', 'token', 'expires_at', 'used_at'];
+    protected $fillable = [
+        'user_id',
+        'token',
+        'expires_at',
+        'used_at',
+    ];
 
     protected function casts(): array
     {

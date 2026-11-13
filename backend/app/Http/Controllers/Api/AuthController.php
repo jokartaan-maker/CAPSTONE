@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Enums\RegistrationStatus;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\LoginRequest;
 use App\Http\Requests\RegisterRequest;
@@ -26,7 +27,7 @@ class AuthController extends Controller
                 'password' => $request->password,
                 'phone' => $request->phone,
                 'is_active' => $isStudent,
-                'registration_status' => $isStudent ? 'approved' : 'pending',
+                'registration_status' => $isStudent ? RegistrationStatus::Approved : RegistrationStatus::Pending,
                 'requested_role' => $request->role,
             ]);
 
@@ -55,8 +56,8 @@ class AuthController extends Controller
 
         if (! $user->is_active) {
             $message = match ($user->registration_status) {
-                'pending' => 'حسابك بانتظار موافقة الإدارة',
-                'rejected' => 'تم رفض طلب تسجيلك، تواصل مع الإدارة',
+                RegistrationStatus::Pending => 'حسابك بانتظار موافقة الإدارة',
+                RegistrationStatus::Rejected => 'تم رفض طلب تسجيلك، تواصل مع الإدارة',
                 default => 'هذا الحساب معطّل، تواصل مع الإدارة',
             };
 
@@ -69,7 +70,7 @@ class AuthController extends Controller
             'message' => 'تم تسجيل الدخول بنجاح',
             'data' => [
                 'token' => $token,
-                'user' => new UserResource($user),
+                'user' => new UserResource($user->load('roles')),
             ],
         ]);
     }

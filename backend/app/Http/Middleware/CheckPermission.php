@@ -12,7 +12,7 @@ class CheckPermission
     {
         $user = $request->user();
 
-        if (! $user || ! in_array($permission, $user->permissionNames(), true)) {
+        if (! $user || ! $user->hasPermission($permission)) {
             return response()->json([
                 'message' => 'ليس لديك صلاحية لتنفيذ هذا الإجراء',
             ], 403);
