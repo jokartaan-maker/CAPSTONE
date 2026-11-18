@@ -17,4 +17,7 @@ return [
     // أقصى عدد للمهارات
     'max_skills' => 10,
 
+    // رابط صفحة "كلمة مرور جديدة" في واجهة React
+    'reset_password_url' => env('FRONTEND_URL', 'http://localhost:5173') . '/student/reset-password',
+
 ];

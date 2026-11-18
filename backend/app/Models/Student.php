@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Notifications\StudentResetPasswordNotification;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
@@ -30,11 +31,17 @@ class Student extends Authenticatable
     protected function casts(): array
     {
         return [
-            'password' => 'hashed',
-            'skills' => 'array',
-            'study_year' => 'integer',
-            'is_active' => 'boolean',
+            'password'          => 'hashed',
+            'skills'            => 'array',
+            'study_year'        => 'integer',
+            'is_active'         => 'boolean',
             'email_verified_at' => 'datetime',
         ];
+    }
+
+    // إيميل "نسيت كلمة المرور" الخاص بالطلاب (بالعربي ورابط React)
+    public function sendPasswordResetNotification($token): void
+    {
+        $this->notify(new StudentResetPasswordNotification($token));
     }
 }
