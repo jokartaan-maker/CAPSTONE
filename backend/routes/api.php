@@ -22,6 +22,9 @@ Route::prefix('student')->group(function () {
     Route::post('forgot-password', [PasswordResetController::class, 'forgot'])
         ->middleware('throttle:5,1');
 
+    Route::post('reset-password', [PasswordResetController::class, 'reset'])
+        ->middleware('throttle:5,1');
+
     // محمي: يحتاج token طالب صالح
     Route::middleware(['auth:sanctum', 'abilities:student'])->group(function () {
         Route::get('me', [AuthController::class, 'me']);
