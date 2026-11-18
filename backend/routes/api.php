@@ -9,6 +9,14 @@ Route::get('/user', function (Request $request) {
 })->middleware('auth:sanctum');
 
 Route::prefix('student')->group(function () {
+    // عام: أي زائر
     Route::post('login', [AuthController::class, 'login'])
         ->middleware('throttle:5,1');
+
+    // محمي: يحتاج token طالب صالح
+    Route::middleware(['auth:sanctum', 'abilities:student'])->group(function () {
+        Route::get('me', [AuthController::class, 'me']);
+        Route::post('logout', [AuthController::class, 'logout']);
+    });
 });
+
