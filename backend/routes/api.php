@@ -10,6 +10,11 @@ Route::get('/user', function (Request $request) {
 
 Route::prefix('student')->group(function () {
     // عام: أي زائر
+    Route::get('register-options', [AuthController::class, 'registerOptions']);
+
+    Route::post('register', [AuthController::class, 'register'])
+        ->middleware('throttle:5,1');
+
     Route::post('login', [AuthController::class, 'login'])
         ->middleware('throttle:5,1');
 
@@ -19,4 +24,3 @@ Route::prefix('student')->group(function () {
         Route::post('logout', [AuthController::class, 'logout']);
     });
 });
-
