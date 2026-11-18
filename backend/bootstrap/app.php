@@ -19,6 +19,9 @@ return Application::configure(basePath: dirname(__DIR__))
             'abilities' => \Laravel\Sanctum\Http\Middleware\CheckAbilities::class,
             'ability'   => \Laravel\Sanctum\Http\Middleware\CheckForAnyAbility::class,
         ]);
+
+        // لا توجد صفحة login في Laravel (الواجهة React)، فلا نعيد التوجيه أبداً
+        $middleware->redirectGuestsTo(fn () => null);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         // كل أخطاء الـ API ترجع JSON
@@ -56,6 +59,3 @@ return Application::configure(basePath: dirname(__DIR__))
         });
     })
     ->create();
-
-
-
