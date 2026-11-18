@@ -4,6 +4,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\Student\AuthController;
 use App\Http\Controllers\Api\Student\PasswordResetController;
+use App\Http\Controllers\Api\Student\ProfileController;
 
 Route::get('/user', function (Request $request) {
     return $request->user();
@@ -29,5 +30,11 @@ Route::prefix('student')->group(function () {
     Route::middleware(['auth:sanctum', 'abilities:student'])->group(function () {
         Route::get('me', [AuthController::class, 'me']);
         Route::post('logout', [AuthController::class, 'logout']);
+
+        // الملف الشخصي
+        Route::get('profile', [ProfileController::class, 'show']);
+        Route::patch('profile', [ProfileController::class, 'update']);
+        Route::put('profile/password', [ProfileController::class, 'changePassword'])
+            ->middleware('throttle:5,1');
     });
 });
