@@ -1,0 +1,342 @@
+/* ============================================================
+   DashboardLayout — Student Dashboard Shell
+   ============================================================ */
+
+/* ── Shell ── */
+.dash-shell {
+  display: flex;
+  height: 100vh;        /* اقفل الارتفاع على الشاشة */
+  overflow: hidden;     /* منع window scroll */
+  background: var(--bg);
+  direction: rtl;
+}
+
+/* ── Sidebar ── */
+.dash-sidebar {
+  width: 220px;
+  min-width: 220px;
+  flex-shrink: 0;
+  background: var(--navy);
+  display: flex;
+  flex-direction: column;
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  overflow-y: auto;
+  overflow-x: hidden;
+  z-index: 100;
+}
+
+/* logo area */
+.dash-sidebar-logo {
+  padding: 20px 18px 16px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  border-bottom: 1px solid rgba(255,255,255,.07);
+  flex-shrink: 0;
+}
+.dash-sidebar-logo img {
+  height: 36px;
+  width: auto;
+  flex-shrink: 0;
+}
+.dash-sidebar-logo-text {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+}
+.dash-sidebar-logo-name {
+  font-size: 15px;
+  font-weight: 800;
+  color: var(--white);
+  line-height: 1;
+}
+.dash-sidebar-logo-tag {
+  font-size: 7.5px;
+  font-weight: 400;
+  letter-spacing: 1.4px;
+  text-transform: uppercase;
+  color: rgba(220,232,238,.4);
+}
+
+/* nav sections */
+.dash-nav {
+  flex: 1;
+  padding: 10px 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  overflow-y: auto;
+}
+
+.dash-nav-section {
+  margin-top: 10px;
+  margin-bottom: 2px;
+}
+.dash-nav-section:first-child { margin-top: 6px; }
+
+.dash-nav-section-title {
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: rgba(255,255,255,.3);
+  padding: 4px 10px 6px;
+}
+
+.dash-nav-link {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 10px;
+  border-radius: var(--r-sm);
+  font-size: 12.5px;
+  font-weight: 600;
+  color: rgba(255,255,255,.65);
+  text-decoration: none;
+  transition: background .15s, color .15s;
+  white-space: nowrap;
+  cursor: pointer;
+  border: none;
+  background: none;
+  font-family: var(--font);
+  width: 100%;
+  text-align: right;
+}
+.dash-nav-link:hover {
+  background: rgba(255,255,255,.08);
+  color: var(--white);
+  text-decoration: none;
+}
+.dash-nav-link.active {
+  background: rgba(255,255,255,.12);
+  color: var(--white);
+}
+.dash-nav-link-icon {
+  width: 16px;
+  height: 16px;
+  object-fit: contain;
+  flex-shrink: 0;
+  filter: brightness(0) invert(1);
+  opacity: .55;
+}
+.dash-nav-link.active .dash-nav-link-icon,
+.dash-nav-link:hover .dash-nav-link-icon {
+  opacity: 1;
+}
+
+/* sidebar footer — user */
+.dash-sidebar-user {
+  padding: 12px 14px;
+  border-top: 1px solid rgba(255,255,255,.07);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-shrink: 0;
+}
+.dash-sidebar-avatar {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--navy-mid), var(--navy-light));
+  color: var(--white);
+  display: grid;
+  place-items: center;
+  font-size: 13px;
+  font-weight: 800;
+  flex-shrink: 0;
+}
+.dash-sidebar-user-info {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+}
+.dash-sidebar-user-name {
+  font-size: 11.5px;
+  font-weight: 700;
+  color: var(--white);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.dash-sidebar-user-role {
+  font-size: 9.5px;
+  color: rgba(220,232,238,.45);
+  font-weight: 400;
+}
+.dash-sidebar-logout {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 5px;
+  border-radius: var(--r-sm);
+  color: rgba(255,255,255,.4);
+  font-size: 10px;
+  transition: color .15s, background .15s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+.dash-sidebar-logout:hover {
+  color: var(--white);
+  background: rgba(255,255,255,.1);
+}
+.dash-sidebar-logout-icon {
+  width: 14px;
+  height: 14px;
+  filter: brightness(0) invert(1);
+  opacity: .5;
+}
+.dash-sidebar-logout:hover .dash-sidebar-logout-icon {
+  opacity: 1;
+}
+
+/* ── Main area ── */
+.dash-main {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  overflow-y: auto;
+  overflow-x: hidden;
+  direction: ltr;   /* ← يخلي السكرول على اليمين */
+}
+
+/* نرجع محتوى الـ main لـ RTL */
+.dash-main > * {
+  direction: rtl;
+}
+
+/* topbar inside main */
+.dash-topbar {
+  height: 50px;
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  padding: 0 28px;
+  gap: 12px;
+  flex-shrink: 0;
+  position: sticky;
+  top: 0;
+  z-index: 90;
+}
+.dash-topbar-breadcrumb {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11.5px;
+  color: var(--text-muted);
+  flex: 1;
+}
+.dash-topbar-breadcrumb a {
+  color: var(--text-muted);
+  font-weight: 600;
+  text-decoration: none;
+}
+.dash-topbar-breadcrumb a:hover { color: var(--navy); }
+.dash-topbar-breadcrumb-sep { color: var(--text-light); font-size: 10px; }
+.dash-topbar-breadcrumb-current { color: var(--navy); font-weight: 700; }
+
+.dash-topbar-right {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-right: auto; /* pushes to right in RTL = visual left */
+}
+.dash-topbar-univ {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 1px;
+}
+.dash-topbar-univ-name {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--navy);
+  line-height: 1.2;
+}
+.dash-topbar-univ-faculty {
+  font-size: 9.5px;
+  color: var(--text-muted);
+}
+
+/* page content */
+.dash-content {
+  flex: 1;
+  padding: 28px 28px 60px;
+  max-width: 1100px;
+  width: 100%;
+  margin: 0 auto;
+}
+
+/* ── Shared page primitives used by dashboard pages ── */
+.dash-page-head {
+  margin-bottom: 24px;
+}
+.dash-page-eyebrow {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 10px;
+  color: var(--text-muted);
+  margin-bottom: 6px;
+}
+.dash-page-eyebrow a {
+  color: var(--text-muted);
+  font-weight: 600;
+}
+.dash-page-eyebrow a:hover { color: var(--navy); }
+.dash-page-title {
+  font-size: 22px;
+  font-weight: 800;
+  color: var(--navy);
+  line-height: 1.2;
+}
+.dash-page-sub {
+  font-size: 12px;
+  color: var(--text-muted);
+  margin-top: 5px;
+  line-height: 1.6;
+}
+
+/* ── Card ── */
+.dash-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--r-lg);
+  box-shadow: var(--shadow);
+  padding: 24px 28px;
+}
+
+/* ── Empty state pill ── */
+.dash-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 32px 16px;
+  gap: 8px;
+  text-align: center;
+}
+.dash-empty-icon {
+  font-size: 28px;
+  opacity: .25;
+}
+.dash-empty-text {
+  font-size: 12px;
+  color: var(--text-light);
+  font-weight: 500;
+}
+
+/* ── Responsive ── */
+@media (max-width: 860px) {
+  .dash-sidebar { display: none; }
+  .dash-topbar { padding: 0 16px; }
+  .dash-content { padding: 20px 16px 40px; }
+}

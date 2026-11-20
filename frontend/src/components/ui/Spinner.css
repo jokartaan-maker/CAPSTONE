@@ -1,0 +1,102 @@
+/* ============================================================
+   Spinner — three variants: page | inline | overlay
+   ============================================================ */
+
+/* ── base wrapper ── */
+.spinner {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+}
+
+/* ── ring ── */
+.spinner-ring {
+  border-radius: 50%;
+  animation: spinner-spin .75s linear infinite;
+  flex-shrink: 0;
+}
+
+/* size: md (default) */
+.spinner-ring {
+  width: 32px; height: 32px;
+  border: 3px solid rgba(13, 34, 52, .1);
+  border-top-color: var(--navy-mid);
+}
+
+/* size: sm */
+.spinner--sm .spinner-ring {
+  width: 20px; height: 20px;
+  border-width: 2.5px;
+}
+
+/* size: lg */
+.spinner--lg .spinner-ring {
+  width: 48px; height: 48px;
+  border-width: 4px;
+}
+
+/* ── label ── */
+.spinner-label {
+  font-size: 11.5px;
+  font-weight: 600;
+  color: var(--text-muted);
+  letter-spacing: .2px;
+}
+.spinner--sm .spinner-label { font-size: 10px; }
+.spinner--lg .spinner-label { font-size: 13px; }
+
+/* ── variant: page (centred in full viewport) ── */
+.spinner--page {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  gap: 14px;
+  background: var(--bg);
+  z-index: 999;
+}
+.spinner--page .spinner-ring {
+  width: 42px; height: 42px;
+  border-width: 3.5px;
+  border-color: rgba(18, 59, 91, .12);
+  border-top-color: var(--navy-mid);
+}
+.spinner--page .spinner-label {
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+/* ── variant: inline (in a card / section) ── */
+.spinner--inline {
+  width: 100%;
+  padding: 40px 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  gap: 10px;
+}
+
+/* ── variant: overlay (over a card, relative parent) ── */
+.spinner--overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(245, 242, 235, .75);
+  backdrop-filter: blur(2px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  gap: 12px;
+  border-radius: inherit;
+  z-index: 10;
+}
+
+/* ── animation ── */
+@keyframes spinner-spin {
+  to { transform: rotate(360deg); }
+}
