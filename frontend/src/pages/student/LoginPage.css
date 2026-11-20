@@ -1,0 +1,38 @@
+/* ============================================================
+   LoginPage — specific styles
+   ============================================================ */
+
+.auth-options-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+}
+
+.auth-remember {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 10.5px;
+  color: var(--text-muted);
+  cursor: pointer;
+  user-select: none;
+}
+
+.auth-remember input {
+  width: 13px;
+  height: 13px;
+  accent-color: var(--navy-mid);
+  cursor: pointer;
+}
+
+.auth-forgot {
+  font-size: 10.5px;
+  font-weight: 600;
+  color: var(--navy-mid);
+  text-decoration: none;
+}
+
+.auth-forgot:hover {
+  text-decoration: underline;
+}

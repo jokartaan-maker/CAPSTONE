@@ -1,0 +1,27 @@
+# Logs
+*.log
+npm-debug.log*
+
+# Dependencies
+node_modules
+
+# Build output
+dist
+dist-ssr
+
+# Local env files
+.env
+.env.*
+!.env.example
+
+# Editor / OS
+.DS_Store
+.idea
+.vscode/*
+!.vscode/extensions.json
+
+# Vite cache
+.vite
+
+# TypeScript incremental build info
+*.tsbuildinfo
