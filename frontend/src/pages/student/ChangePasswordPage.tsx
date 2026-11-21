@@ -2,6 +2,7 @@ import { useState, type FormEvent } from 'react'
 import { Link } from 'react-router-dom'
 import './ChangePasswordPage.css'
 import './DashboardPage.css'
+import { UnivLogo } from '../../components/ui/UnivLogo'
 import { profileApi } from '../../api/profile'
 import { ApiError, toFieldErrors } from '../../api/client'
 import { PasswordInput } from '../../components/ui/controls'
@@ -68,10 +69,7 @@ export function ChangePasswordPage() {
           <span className="db-topbar-current">تغيير كلمة المرور</span>
         </div>
         <div className="db-topbar-univ">
-          <div className="db-topbar-univ-text">
-            <span className="db-topbar-univ-name">جامعة الشام الخاصة</span>
-            <span className="db-topbar-univ-faculty"> بوابة الطالب</span>
-          </div>
+          <UnivLogo height={34} />
         </div>
       </header>
 

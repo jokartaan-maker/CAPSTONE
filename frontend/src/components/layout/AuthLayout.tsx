@@ -1,4 +1,5 @@
 import { type ReactNode } from 'react'
+import { UnivLogo } from '../ui/UnivLogo'
 
 import sidebarBg from '../../assets/images/background.png'
 import {
@@ -7,7 +8,6 @@ import {
   iconShieldCheck,  // إنجاز  — درع + صح
   iconShield,       // بيانات محمية — درع بسيط
   iconInfo,         // الدعم والمساعدة — دائرة info
-  iconBuilding,     // أيقونة الجامعة — بناية
 } from '../../assets/icons'
 
 const Ico = ({
@@ -121,12 +121,7 @@ export function AuthLayout({ children, roleEyebrow, topLink, footer }: AuthLayou
               </button>
               {/* يمين: جامعة */}
               <div className="auth-univ-lockup">
-                <div className="auth-univ-text">
-                  <span className="auth-univ-name">جامعة الشام الخاصة</span>
-                </div>
-                <div className="auth-univ-icon">
-                  <Ico src={iconBuilding} size={15} opacity={0.65} />
-                </div>
+                <UnivLogo height={32} />
               </div>
             </div>
 
