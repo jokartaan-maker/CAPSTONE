@@ -2,11 +2,15 @@
 
 namespace App\Notifications;
 
-use Illuminate\Notifications\Messages\MailMessage;
+use Illuminate\Bus\Queueable;
+use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Notification;
+use Illuminate\Notifications\Messages\MailMessage;
 
-class StudentResetPasswordNotification extends Notification
+class StudentResetPasswordNotification extends Notification implements ShouldQueue
 {
+    use Queueable;
+
     public function __construct(public string $token)
     {
     }
@@ -18,17 +22,15 @@ class StudentResetPasswordNotification extends Notification
 
     public function toMail(object $notifiable): MailMessage
     {
-        $url = config('students.reset_password_url')
+        $resetUrl = config('students.reset_password_url')
             . '?token=' . $this->token
             . '&email=' . urlencode($notifiable->email);
 
         return (new MailMessage)
-            ->subject('إعادة تعيين كلمة المرور')
-            ->greeting('مرحباً ' . $notifiable->name)
-            ->line('وصلنا طلب لإعادة تعيين كلمة المرور لحسابك.')
-            ->action('تعيين كلمة مرور جديدة', $url)
-            ->line('هذا الرابط صالح لمدة 30 دقيقة ويُستخدم مرة واحدة فقط.')
-            ->line('إذا لم تطلب ذلك، تجاهل هذه الرسالة وكلمة مرورك لن تتغير.')
-            ->salutation('نظام إدارة مشاريع التخرج');
+            ->subject('إعادة تعيين كلمة المرور — Capstone')
+            ->view('emails.student.reset-password', [
+                'studentName' => $notifiable->name,
+                'resetUrl'    => $resetUrl,
+            ]);
     }
 }

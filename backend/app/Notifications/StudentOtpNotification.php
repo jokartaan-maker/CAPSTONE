@@ -2,11 +2,15 @@
 
 namespace App\Notifications;
 
+use Illuminate\Bus\Queueable;
+use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Notification;
 use Illuminate\Notifications\Messages\MailMessage;
 
-class StudentOtpNotification extends Notification
+class StudentOtpNotification extends Notification implements ShouldQueue
 {
+    use Queueable;
+
     public function __construct(public string $otp)
     {
     }
