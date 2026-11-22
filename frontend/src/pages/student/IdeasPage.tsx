@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom'
 import './IdeasPage.css'
 import { MOCK_IDEAS } from '../../data/ideas'
 import type { Idea } from '../../types/api'
+import { UnivLogo } from '../../components/ui/UnivLogo'
 
 /* ================================================================
    Custom Dropdown
@@ -572,7 +573,7 @@ export function IdeasPage() {
   }
 
   return (
-    <>
+    <div className="db-wrap">
       {showModal && (
         <SubmitIdeaModal
           onClose={() => setShowModal(false)}
@@ -588,15 +589,13 @@ export function IdeasPage() {
           <span className="db-topbar-current">بنك الأفكار</span>
         </div>
         <div className="db-topbar-univ">
-          <div className="db-topbar-univ-text">
-            <span className="db-topbar-univ-name">جامعة الشام الخاصة</span>
-            <span className="db-topbar-univ-faculty"> بوابة الطالب</span>
-          </div>
+          <UnivLogo height={34} />
         </div>
       </header>
 
       {/* ── Body ── */}
       <div className="db-body">
+        <div className="db-body-inner">
 
         {/* heading + CTA */}
         <div className="ideas-page-head">
@@ -695,7 +694,8 @@ export function IdeasPage() {
           </div>
         )}
 
+        </div>{/* end db-body-inner */}
       </div>
-    </>
+    </div>
   )
 }

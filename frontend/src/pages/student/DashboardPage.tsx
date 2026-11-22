@@ -2,6 +2,7 @@ import './DashboardPage.css'
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { useAuth } from '../../context/AuthContext'
+import { UnivLogo } from '../../components/ui/UnivLogo'
 import {
   iconPersons,
   iconMonitor,
@@ -146,7 +147,7 @@ export function DashboardPage() {
   }
 
   return (
-    <>
+    <div className="db-wrap">
       {/* ── Topbar ── */}
       <header className="db-topbar">
         <div className="db-topbar-breadcrumb">
@@ -155,15 +156,13 @@ export function DashboardPage() {
           <span className="db-topbar-current">نظرة عامة</span>
         </div>
         <div className="db-topbar-univ">
-          <div className="db-topbar-univ-text">
-            <span className="db-topbar-univ-name">جامعة الشام الخاصة</span>
-            <span className="db-topbar-univ-faculty"> بوابة الطالب</span>
-          </div>
+          <UnivLogo height={34} />
         </div>
       </header>
 
       {/* ── Body ── */}
       <div className="db-body">
+        <div className="db-body-inner">
 
         {/* Page heading */}
         <div className="db-page-head">
@@ -369,7 +368,8 @@ export function DashboardPage() {
 
           </div>
         </div>
+        </div>{/* end db-body-inner */}
       </div>
-    </>
+    </div>
   )
 }

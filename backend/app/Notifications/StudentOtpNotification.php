@@ -7,7 +7,7 @@ use Illuminate\Notifications\Messages\MailMessage;
 
 class StudentOtpNotification extends Notification
 {
-    public function __construct(public string $otp)
+    public function __construct(public readonly string $otp)
     {
     }
 

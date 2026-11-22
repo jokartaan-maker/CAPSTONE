@@ -5,7 +5,7 @@ import { authApi } from '../../api/auth'
 import { ApiError, toFieldErrors } from '../../api/client'
 import { useAuth } from '../../context/AuthContext'
 import { AuthLayout } from '../../components/layout/AuthLayout'
-import { Input, PasswordInput, Select, Checkbox } from '../../components/ui/controls'
+import { Input, PasswordInput, CustomSelect, Checkbox } from '../../components/ui/controls'
 import { SkillsInput } from '../../components/ui/SkillsInput'
 import { Button } from '../../components/ui/Button'
 import { Alert } from '../../components/ui/Alert'
@@ -128,12 +128,12 @@ export function RegisterPage() {
 
         <div className="form-grid-2">
           <Input id="uni_no" label="الرقم الجامعي" required placeholder="20221048" value={universityNo} onChange={e => setUniversityNo(e.target.value)} error={errors.university_number} />
-          <Select id="major" label="القسم" required placeholder="هندسة البرمجيات" value={major} onChange={e => setMajor(e.target.value)} error={errors.major}
+          <CustomSelect id="major" label="القسم" required placeholder="هندسة البرمجيات" value={major} onChange={v => setMajor(v)} error={errors.major}
             options={(options?.majors ?? ['هندسة البرمجيات', 'هندسة الحاسوب', 'نظم المعلومات']).map(m => ({ value: m, label: m }))} />
         </div>
 
         <div className="form-grid-2">
-          <Select id="study_year" label="السنة الدراسية" required placeholder="السنة الخامسة" value={studyYear} onChange={e => setStudyYear(e.target.value)} error={errors.study_year}
+          <CustomSelect id="study_year" label="السنة الدراسية" required placeholder="السنة الخامسة" value={studyYear} onChange={v => setStudyYear(v)} error={errors.study_year}
             options={(options?.study_years ?? [4, 5]).map(y => ({ value: String(y), label: `السنة ${y}` }))} />
           <SkillsInput label="المهارات" value={skills} onChange={setSkills} maxSkills={options?.max_skills ?? 6} error={errors.skills} />
         </div>

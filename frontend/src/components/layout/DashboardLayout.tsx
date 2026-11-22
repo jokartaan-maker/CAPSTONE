@@ -11,7 +11,6 @@ import {
   iconBuilding,
   iconInfo,
   iconShieldCheck,
-  iconLockClosed,
   iconHelp,
 } from '../../assets/icons/index'
 
@@ -121,26 +120,11 @@ export function DashboardLayout() {
           <div className="dash-nav-section">
             <div className="dash-nav-section-title">الحساب</div>
             <NavLink
-              to="/student/profile"
-              end
-              className={({ isActive }) => 'dash-nav-link' + (isActive ? ' active' : '')}
-            >
-              <NavIco src={iconPerson} />
-              الملف الشخصي
-            </NavLink>
-            <NavLink
-              to="/student/profile/password"
-              className={({ isActive }) => 'dash-nav-link' + (isActive ? ' active' : '')}
-            >
-              <NavIco src={iconLockClosed} />
-              كلمة المرور
-            </NavLink>
-            <NavLink
-              to="/student/help"
+              to="/student/account"
               className={({ isActive }) => 'dash-nav-link' + (isActive ? ' active' : '')}
             >
               <NavIco src={iconHelp} />
-              حساب وانتباهات
+              حسابي والإشعارات
             </NavLink>
           </div>
 

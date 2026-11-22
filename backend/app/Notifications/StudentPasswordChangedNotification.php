@@ -2,11 +2,14 @@
 
 namespace App\Notifications;
 
+use Illuminate\Bus\Queueable;
+use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 
-class StudentPasswordChangedNotification extends Notification
+class StudentPasswordChangedNotification extends Notification implements ShouldQueue
 {
+    use Queueable;
     // true: التغيير من داخل الحساب (يبقى الجهاز الحالي داخلاً)
     // false: التغيير عبر رابط "نسيت كلمة المرور" (خروج من كل الأجهزة)
     public function __construct(public bool $keptCurrentDevice = false)

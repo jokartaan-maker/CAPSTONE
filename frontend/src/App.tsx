@@ -6,8 +6,7 @@ import { RegisterPage } from './pages/student/RegisterPage'
 import { ForgotPasswordPage } from './pages/student/ForgotPasswordPage'
 import { ResetPasswordPage } from './pages/student/ResetPasswordPage'
 import { DashboardPage } from './pages/student/DashboardPage'
-import { ProfilePage } from './pages/student/ProfilePage'
-import { ChangePasswordPage } from './pages/student/ChangePasswordPage'
+import { AccountPage } from './pages/student/AccountPage'
 import { IdeasPage } from './pages/student/IdeasPage'
 import { IdeaDetailPage } from './pages/student/IdeaDetailPage'
 import { NotFoundPage } from './pages/NotFoundPage'
@@ -35,8 +34,7 @@ export function App() {
       <Route element={<ProtectedRoute />}>
         <Route element={<DashboardLayout />}>
           <Route path="/student/dashboard"        element={<DashboardPage />} />
-          <Route path="/student/profile"          element={<ProfilePage />} />
-          <Route path="/student/profile/password" element={<ChangePasswordPage />} />
+          <Route path="/student/account"          element={<AccountPage />} />
           <Route path="/student/ideas"            element={<IdeasPage />} />
           <Route path="/student/ideas/:id"        element={<IdeaDetailPage />} />
         </Route>
