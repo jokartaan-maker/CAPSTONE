@@ -5,65 +5,126 @@ namespace App\Http\Controllers\Api\Student;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Student\ForgotPasswordRequest;
 use App\Http\Requests\Student\ResetPasswordRequest;
+use App\Http\Requests\Student\VerifyOtpRequest;
 use App\Models\Student;
+use App\Notifications\StudentOtpNotification;
 use App\Notifications\StudentPasswordChangedNotification;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Support\Facades\Password;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 
 class PasswordResetController extends Controller
 {
     // POST /api/student/forgot-password
+    // يولّد OTP ويرسله بالإيميل
     public function forgot(ForgotPasswordRequest $request): JsonResponse
     {
         $email = $request->validated()['email'];
 
         $student = Student::where('email', $email)->first();
 
-        // نرسل فقط إذا كان الحساب موجوداً ومفعّلاً
         if ($student && $student->is_active) {
-            Password::broker('students')->sendResetLink(['email' => $email]);
+            $otp = str_pad((string) random_int(0, 999999), 6, '0', STR_PAD_LEFT);
+
+            DB::table('student_otp_tokens')->updateOrInsert(
+                ['email' => $email],
+                [
+                    'otp'         => $otp,
+                    'reset_token' => null,
+                    'expires_at'  => now()->addMinutes(10),
+                    'verified_at' => null,
+                    'created_at'  => now(),
+                    'updated_at'  => now(),
+                ]
+            );
+
+            $student->notify(new StudentOtpNotification($otp));
         }
 
-        // نفس الرد دائماً: لا نكشف هل الإيميل مسجّل أم لا
         return response()->json([
-            'message' => 'إذا كان البريد مسجّلاً لدينا، ستصلك رسالة فيها رابط إعادة تعيين كلمة المرور خلال دقائق',
+            'message' => 'إذا كان البريد مسجّلاً لدينا، ستصلك رسالة تحتوي رمز التحقق خلال دقائق',
+        ]);
+    }
+
+    // POST /api/student/verify-otp
+    // يتحقق من الكود ويعيد reset_token مؤقت
+    public function verifyOtp(VerifyOtpRequest $request): JsonResponse
+    {
+        $data  = $request->validated();
+        $email = $data['email'];
+        $otp   = $data['otp'];
+
+        $record = DB::table('student_otp_tokens')
+            ->where('email', $email)
+            ->first();
+
+        if (
+            ! $record
+            || $record->otp !== $otp
+            || now()->isAfter($record->expires_at)
+            || $record->verified_at !== null
+        ) {
+            return response()->json([
+                'message' => 'رمز التحقق غير صحيح أو منتهي الصلاحية',
+            ], 422);
+        }
+
+        $resetToken = Str::random(64);
+
+        DB::table('student_otp_tokens')
+            ->where('email', $email)
+            ->update([
+                'reset_token' => Hash::make($resetToken),
+                'verified_at' => now(),
+                'updated_at'  => now(),
+            ]);
+
+        return response()->json([
+            'message'     => 'تم التحقق من الرمز بنجاح',
+            'reset_token' => $resetToken,
+            'email'       => $email,
         ]);
     }
 
     // POST /api/student/reset-password
+    // يستقبل reset_token + كلمة المرور الجديدة
     public function reset(ResetPasswordRequest $request): JsonResponse
     {
-        $data = $request->validated();
+        $data  = $request->validated();
+        $email = $data['email'];
 
-        $status = Password::broker('students')->reset(
-            [
-                'email'                 => $data['email'],
-                'password'              => $data['password'],
-                'password_confirmation' => $request->input('password_confirmation'),
-                'token'                 => $data['token'],
-            ],
-            function (Student $student, string $password) {
-                // 1) كلمة المرور الجديدة (تُشفَّر تلقائياً)
-                $student->forceFill([
-                    'password'       => $password,
-                    'remember_token' => Str::random(60),
-                ])->save();
+        $record = DB::table('student_otp_tokens')
+            ->where('email', $email)
+            ->whereNotNull('verified_at')
+            ->first();
 
-                // 2) خروج من كل الأجهزة: حذف كل الـ tokens القديمة
-                $student->tokens()->delete();
-
-                // 3) إيميل التنبيه الأمني
-                $student->notify(new StudentPasswordChangedNotification());
-            }
-        );
-
-        if ($status !== Password::PASSWORD_RESET) {
-            // token خطأ، أو منتهي (أكثر من 30 دقيقة)، أو استُخدم مسبقاً، أو إيميل غير مطابق
+        if (
+            ! $record
+            || ! Hash::check($data['token'], $record->reset_token)
+            || now()->isAfter((new \Carbon\Carbon($record->expires_at))->addMinutes(10))
+        ) {
             return response()->json([
-                'message' => 'رابط إعادة التعيين غير صالح أو منتهي الصلاحية، اطلب رابطاً جديداً',
+                'message' => 'جلسة إعادة التعيين غير صالحة، ابدأ من جديد',
             ], 422);
         }
+
+        $student = Student::where('email', $email)->first();
+
+        if (! $student || ! $student->is_active) {
+            return response()->json(['message' => 'الحساب غير موجود'], 422);
+        }
+
+        $student->forceFill([
+            'password'       => $data['password'],
+            'remember_token' => Str::random(60),
+        ])->save();
+
+        $student->tokens()->delete();
+
+        DB::table('student_otp_tokens')->where('email', $email)->delete();
+
+        $student->notify(new StudentPasswordChangedNotification());
 
         return response()->json([
             'message' => 'تم تغيير كلمة المرور بنجاح، يمكنك تسجيل الدخول الآن',

@@ -65,7 +65,8 @@ button, input, select, textarea { font-family: var(--font); }
 .auth-shell {
   display: flex;
   flex-direction: row;
-  min-height: 100vh;
+  height: 100vh;
+  overflow: hidden;
   direction: rtl;
   background: var(--bg);
 }
@@ -234,8 +235,11 @@ button, input, select, textarea { font-family: var(--font); }
   display: flex;
   flex-direction: column;
   align-items: stretch;
+  height: 100vh;
   overflow-y: auto;
+  overflow-x: hidden;
   background: var(--bg);
+  direction: ltr;   /* scrollbar على اليسار بصرياً */
 }
 .auth-content {
   flex: 1;
@@ -244,6 +248,7 @@ button, input, select, textarea { font-family: var(--font); }
   align-items: center;
   justify-content: center;
   padding: 20px clamp(24px, 5vw, 76px) 12px;
+  direction: rtl;
 }
 .auth-box {
   width: 100%;
@@ -498,6 +503,111 @@ select.control {
   color: var(--text-light);
   margin-top: 10px;
   justify-content: center;
+}
+
+/* ============================================================
+   CUSTOM SELECT  (cselect)
+   ============================================================ */
+.cselect-wrap {
+  position: relative;
+}
+.cselect-btn {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 0 13px;
+  background: var(--surface);
+  border: 1.5px solid var(--border);
+  border-radius: var(--r-md);
+  font-size: 12.5px;
+  font-family: var(--font);
+  font-weight: 500;
+  color: var(--text);
+  cursor: pointer;
+  min-height: 42px;
+  text-align: right;
+  direction: rtl;
+  transition: border-color .18s, box-shadow .18s;
+  appearance: none;
+  -webkit-appearance: none;
+  outline: none;
+}
+.cselect-btn.placeholder { color: var(--text-light); }
+.cselect-btn:hover       { border-color: var(--border-dark); background: var(--surface); }
+.cselect-btn.open,
+.cselect-btn:focus-visible {
+  border-color: var(--navy-mid);
+  box-shadow: 0 0 0 3px rgba(18,59,91,.1);
+  outline: none;
+}
+.cselect-btn.has-error {
+  border-color: var(--danger);
+  box-shadow: 0 0 0 3px rgba(192,57,43,.09);
+}
+.cselect-chevron {
+  flex-shrink: 0;
+  color: var(--text-muted);
+  transition: transform .2s;
+}
+.cselect-chevron.rotated { transform: rotate(180deg); }
+
+.cselect-menu {
+  position: absolute;
+  top: calc(100% + 4px);
+  right: 0;
+  left: 0;
+  background: var(--surface);
+  border: 1.5px solid var(--border);
+  border-radius: var(--r-md);
+  box-shadow: 0 8px 24px rgba(13,34,52,.12), 0 2px 6px rgba(13,34,52,.06);
+  z-index: 400;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  padding: 5px;
+  animation: cselect-in .12s ease;
+}
+@keyframes cselect-in {
+  from { opacity: 0; transform: translateY(-4px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.cselect-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 9px 12px;
+  font-size: 12.5px;
+  font-family: var(--font);
+  font-weight: 500;
+  color: var(--navy);
+  background: transparent;
+  border: none;
+  border-radius: var(--r-sm);
+  cursor: pointer;
+  text-align: right;
+  direction: rtl;
+  transition: background .12s, color .12s;
+  outline: none;
+  width: 100%;
+  appearance: none;
+  -webkit-appearance: none;
+  -webkit-highlight-color: transparent;
+  -webkit-tap-highlight-color: transparent;
+  user-select: none;
+}
+.cselect-item:hover  {
+  background: var(--ivory);
+  color: var(--navy);
+}
+.cselect-item.active {
+  background: rgba(18,59,91,.08);
+  color: var(--navy-mid);
+  font-weight: 700;
+}
+.cselect-item.active:hover {
+  background: rgba(18,59,91,.13);
 }
 
 /* ============================================================

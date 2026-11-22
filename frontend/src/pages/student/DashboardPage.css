@@ -2,6 +2,14 @@
    DashboardPage — Student Overview
    ============================================================ */
 
+/* ── Page wrapper ── */
+.db-wrap {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  overflow: hidden;
+}
+
 /* ── Topbar ── */
 .db-topbar {
   height: 50px;
@@ -14,7 +22,7 @@
   flex-shrink: 0;
   position: sticky;
   top: 0;
-  z-index: 90;
+  z-index: 200;
 }
 .db-topbar-breadcrumb {
   flex: 1;
@@ -65,7 +73,13 @@
 
 /* ── Page body ── */
 .db-body {
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
   padding: 28px 28px 60px;
+  direction: rtl;
+}
+.db-body-inner {
   max-width: 1060px;
   width: 100%;
   margin: 0 auto;

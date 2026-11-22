@@ -147,7 +147,7 @@ export function DashboardPage() {
   }
 
   return (
-    <>
+    <div className="db-wrap">
       {/* ── Topbar ── */}
       <header className="db-topbar">
         <div className="db-topbar-breadcrumb">
@@ -162,6 +162,7 @@ export function DashboardPage() {
 
       {/* ── Body ── */}
       <div className="db-body">
+        <div className="db-body-inner">
 
         {/* Page heading */}
         <div className="db-page-head">
@@ -367,7 +368,8 @@ export function DashboardPage() {
 
           </div>
         </div>
+        </div>{/* end db-body-inner */}
       </div>
-    </>
+    </div>
   )
 }

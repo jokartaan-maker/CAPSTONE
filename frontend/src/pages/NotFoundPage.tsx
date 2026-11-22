@@ -10,7 +10,7 @@ export function NotFoundPage() {
           الرابط الذي وصلت إليه غير موجود أو تم نقله.
         </p>
         <Link to="/student/login" className="btn btn-primary">
-          العودة لتسجيل الدخول
+        Back
         </Link>
       </div>
     </div>

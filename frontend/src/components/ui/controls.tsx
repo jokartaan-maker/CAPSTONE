@@ -3,6 +3,8 @@ import {
   type SelectHTMLAttributes,
   type ReactNode,
   useState,
+  useRef,
+  useEffect,
 } from 'react'
 
 // ── helpers ──────────────────────────────────────────────────
@@ -161,6 +163,92 @@ export function Select({
         </select>
       </div>
       <FieldError>{error}</FieldError>
+    </div>
+  )
+}
+
+// ── CustomSelect — dropdown مخصص بدل <select> الافتراضي ──────
+interface CustomSelectProps {
+  id?: string
+  label: string
+  required?: boolean
+  placeholder?: string
+  value: string
+  onChange: (value: string) => void
+  options: SelectOption[]
+  error?: string
+  className?: string
+}
+
+export function CustomSelect({
+  id, label, required, placeholder, value, onChange, options, error, className = '',
+}: CustomSelectProps) {
+  const [open, setOpen] = useState(false)
+  const ref = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    const h = (e: MouseEvent) => {
+      if (ref.current && !ref.current.contains(e.target as Node)) setOpen(false)
+    }
+    document.addEventListener('mousedown', h)
+    return () => document.removeEventListener('mousedown', h)
+  }, [])
+
+  const selected = options.find(o => String(o.value) === value)
+  const display  = selected ? selected.label : placeholder ?? '— اختر —'
+
+  return (
+    <div className={`field ${className}`.trim()}>
+      <FieldLabel id={id} label={label} required={required} />
+      <div className="cselect-wrap" ref={ref}>
+        <button
+          type="button"
+          id={id}
+          className={`cselect-btn${open ? ' open' : ''}${!value ? ' placeholder' : ''}${error ? ' has-error' : ''}`}
+          onClick={() => setOpen(o => !o)}
+          aria-expanded={open}
+          aria-haspopup="listbox"
+        >
+          <span>{display}</span>
+          <svg
+            className={`cselect-chevron${open ? ' rotated' : ''}`}
+            width="13" height="13" viewBox="0 0 24 24"
+            fill="none" stroke="currentColor" strokeWidth="2.5"
+            strokeLinecap="round" strokeLinejoin="round"
+          >
+            <path d="m6 9 6 6 6-6" />
+          </svg>
+        </button>
+
+        {open && (
+          <div className="cselect-menu" role="listbox">
+            {options.map(o => {
+              const isActive = String(o.value) === value
+              return (
+                <button
+                  key={String(o.value)}
+                  type="button"
+                  role="option"
+                  aria-selected={isActive}
+                  className={`cselect-item${isActive ? ' active' : ''}`}
+                  onClick={() => { onChange(String(o.value)); setOpen(false) }}
+                >
+                  <span style={{ flex: 1 }}>{o.label}</span>
+                  {isActive && (
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none"
+                      stroke="currentColor" strokeWidth="2.5"
+                      strokeLinecap="round" strokeLinejoin="round"
+                      style={{ flexShrink: 0 }}>
+                      <polyline points="20 6 9 17 4 12" />
+                    </svg>
+                  )}
+                </button>
+              )
+            })}
+          </div>
+        )}
+      </div>
+      {error && <span className="field-error">{error}</span>}
     </div>
   )
 }

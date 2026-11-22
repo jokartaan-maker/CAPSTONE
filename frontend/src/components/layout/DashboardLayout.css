@@ -202,12 +202,11 @@
   display: flex;
   flex-direction: column;
   height: 100vh;
-  overflow-y: auto;
-  overflow-x: hidden;
-  direction: ltr;   /* ← يخلي السكرول على اليمين */
+  overflow: hidden;
+  direction: ltr;   /* scrollbar على اليمين */
 }
 
-/* نرجع محتوى الـ main لـ RTL */
+/* نرجع كل محتوى main لـ RTL */
 .dash-main > * {
   direction: rtl;
 }
@@ -224,7 +223,7 @@
   flex-shrink: 0;
   position: sticky;
   top: 0;
-  z-index: 90;
+  z-index: 200;
 }
 .dash-topbar-breadcrumb {
   display: flex;

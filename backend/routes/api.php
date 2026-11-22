@@ -23,6 +23,9 @@ Route::prefix('student')->group(function () {
     Route::post('forgot-password', [PasswordResetController::class, 'forgot'])
         ->middleware('throttle:5,1');
 
+    Route::post('verify-otp', [PasswordResetController::class, 'verifyOtp'])
+        ->middleware('throttle:10,1');
+
     Route::post('reset-password', [PasswordResetController::class, 'reset'])
         ->middleware('throttle:5,1');
 

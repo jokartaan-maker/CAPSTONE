@@ -27,7 +27,7 @@ export function IdeaDetailPage() {
 
   if (!idea) {
     return (
-      <>
+      <div className="db-wrap">
         <header className="db-topbar">
           <div className="db-topbar-breadcrumb">
             <Link to="/student/ideas">بنك الأفكار</Link>
@@ -46,14 +46,14 @@ export function IdeaDetailPage() {
             </div>
           </div>
         </div>
-      </>
+      </div>
     )
   }
 
   const hasOpenTeam = idea.teams.some(t => t.status === 'open')
 
   return (
-    <>
+    <div className="db-wrap">
       {/* ── Topbar ── */}
       <header className="db-topbar">
         <div className="db-topbar-breadcrumb">
@@ -70,6 +70,7 @@ export function IdeaDetailPage() {
 
       {/* ── Body ── */}
       <div className="db-body">
+        <div className="db-body-inner">
 
         {/* back + title */}
         <div className="idd-page-head">
@@ -257,7 +258,8 @@ export function IdeaDetailPage() {
 
           </div>
         </div>
+        </div>{/* end db-body-inner */}
       </div>
-    </>
+    </div>
   )
 }

@@ -573,7 +573,7 @@ export function IdeasPage() {
   }
 
   return (
-    <>
+    <div className="db-wrap">
       {showModal && (
         <SubmitIdeaModal
           onClose={() => setShowModal(false)}
@@ -595,6 +595,7 @@ export function IdeasPage() {
 
       {/* ── Body ── */}
       <div className="db-body">
+        <div className="db-body-inner">
 
         {/* heading + CTA */}
         <div className="ideas-page-head">
@@ -693,7 +694,8 @@ export function IdeasPage() {
           </div>
         )}
 
+        </div>{/* end db-body-inner */}
       </div>
-    </>
+    </div>
   )
 }

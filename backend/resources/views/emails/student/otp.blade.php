@@ -80,14 +80,14 @@
 
     .otp-code {
       display: inline-block;
-      background: linear-gradient(135deg, #0d1b2a 0%, #1b3a5c 100%);
-      color: #c9a84c;
-      font-size: 38px;
+      background: #f4f7fa;
+      color: #0d1b2a;
+      font-size: 32px;
       font-weight: 800;
-      letter-spacing: 14px;
-      padding: 18px 36px 18px 22px;
-      border-radius: 12px;
-      border-bottom: 3px solid #c9a84c;
+      letter-spacing: 10px;
+      padding: 16px 28px;
+      border-radius: 10px;
+      border: 2px solid #c8d4de;
       font-family: 'Courier New', monospace;
     }
 
