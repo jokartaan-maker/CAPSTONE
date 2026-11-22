@@ -5,7 +5,9 @@ import { App } from './App'
 import { AuthProvider } from './context/AuthContext'
 import './index.css'
 
-createRoot(document.getElementById('root')!).render(
+const root = createRoot(document.getElementById('root')!)
+
+root.render(
   <StrictMode>
     <BrowserRouter>
       <AuthProvider>
@@ -14,3 +16,15 @@ createRoot(document.getElementById('root')!).render(
     </BrowserRouter>
   </StrictMode>,
 )
+
+/* ── أخفِ الـ boot splash بعد ما يرندر React ── */
+requestAnimationFrame(() => {
+  requestAnimationFrame(() => {
+    const splash = document.getElementById('boot-splash')
+    if (splash) {
+      splash.classList.add('hidden')
+      // احذفه من الـ DOM بعد انتهاء الـ transition
+      splash.addEventListener('transitionend', () => splash.remove(), { once: true })
+    }
+  })
+})

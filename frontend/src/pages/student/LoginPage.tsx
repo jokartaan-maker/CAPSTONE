@@ -8,11 +8,6 @@ import { AuthLayout } from '../../components/layout/AuthLayout'
 import { Input, PasswordInput } from '../../components/ui/controls'
 import { Button } from '../../components/ui/Button'
 import { Alert } from '../../components/ui/Alert'
-import { iconPerson } from '../../assets/icons'
-
-const RoleIco = ({ src }: { src: string }) => (
-  <img src={src} alt="" width={20} height={20} style={{ objectFit: 'contain' }} />
-)
 
 export function LoginPage() {
   const { setSession } = useAuth()
@@ -52,7 +47,8 @@ export function LoginPage() {
   return (
     <AuthLayout
       topLink={<Link to="/" className="auth-back-link">← العودة لاختيار الدور</Link>}
-      roleEyebrow={{ label: 'بوابة طالب', icon: <RoleIco src={iconPerson} /> }}
+      eyebrow="بوابة الطالب"
+      footer={<>ليس لديك حساب؟ <Link to="/student/register">إنشاء حساب طالب</Link></>}
     >
       <div className="auth-heading">
         <h1>مرحباً بعودتك</h1>
@@ -92,10 +88,6 @@ export function LoginPage() {
           ← تسجيل الدخول
         </Button>
       </form>
-
-      <div className="auth-form-footer">
-        ليس لديك حساب؟ <Link to="/student/register">إنشاء حساب طالب</Link>
-      </div>
     </AuthLayout>
   )
 }

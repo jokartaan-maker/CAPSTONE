@@ -30,13 +30,9 @@ export function RoleSelectionPage() {
 
   return (
     <AuthLayout>
-      {/* eyebrow */}
-      <div style={{ fontSize: 10, fontWeight: 600, color: 'var(--text-muted)', marginBottom: 8 }}>
-        أهلاً بك في Capstone
-      </div>
-
-      {/* heading */}
-      <div className="auth-heading" style={{ marginBottom: 16 }}>
+      {/* intro */}
+      <div className="role-intro">
+        <p className="role-intro-eyebrow">أهلاً بك في Capstone</p>
         <h1>ابدأ رحلتك باختيار دورك</h1>
         <p>اختر صفتك الأكاديمية للوصول إلى مساحة العمل المناسبة لك.</p>
       </div>
@@ -94,7 +90,7 @@ export function RoleSelectionPage() {
 
       {/* year */}
       <div className="role-year-note">
-        منصة إدارة مشاريع التخرج · العام الأكاديمي 2025–2026
+        منصة إدارة مشاريع التخرج · العام الأكاديمي 2026-2027
       </div>
     </AuthLayout>
   )

@@ -37,9 +37,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     let active = true
     if (!token) {
-      setLoading(false)
-      return
+      // لا token → ما في داعي نتحقق، لكن نحافظ على minimum 400ms
+      const t = setTimeout(() => { if (active) setLoading(false) }, 400)
+      return () => { active = false; clearTimeout(t) }
     }
+    const startTime = Date.now()
     void (async () => {
       try {
         const res = await authApi.me()
@@ -53,12 +55,15 @@ export function AuthProvider({ children }: { children: ReactNode }) {
           setStudent(null)
         }
       } finally {
-        if (active) setLoading(false)
+        if (active) {
+          // ضمان minimum 400ms حتى لا يصير flash
+          const elapsed = Date.now() - startTime
+          const remaining = Math.max(0, 400 - elapsed)
+          setTimeout(() => { if (active) setLoading(false) }, remaining)
+        }
       }
     })()
-    return () => {
-      active = false
-    }
+    return () => { active = false }
   }, [token])
 
   const setSession = (newToken: string, newStudent: Student) => {

@@ -12,10 +12,13 @@ import { IdeaDetailPage } from './pages/student/IdeaDetailPage'
 import { NotFoundPage } from './pages/NotFoundPage'
 import { RoleSelectionPage } from './pages/RoleSelectionPage'
 import { RoleLoginPage, RoleRegisterPage } from './pages/RoleAuthPages'
+import { PageProgress } from './components/ui/PageProgress'
 
 export function App() {
   return (
-    <Routes>
+    <>
+      <PageProgress />
+      <Routes>
       <Route path="/" element={<RoleSelectionPage />} />
 
       <Route element={<PublicOnlyRoute />}>
@@ -42,5 +45,6 @@ export function App() {
 
       <Route path="*" element={<NotFoundPage />} />
     </Routes>
+    </>
   )
 }

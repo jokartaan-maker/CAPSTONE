@@ -10,15 +10,7 @@ import { SkillsInput } from '../../components/ui/SkillsInput'
 import { Button } from '../../components/ui/Button'
 import { Alert } from '../../components/ui/Alert'
 import { Spinner } from '../../components/ui/Spinner'
-import {
-  iconPerson,       // الاسم
-  
-} from '../../assets/icons'
 import type { RegisterOptions } from '../../types/api'
-
-const RoleIco = ({ src }: { src: string }) => (
-  <img src={src} alt="" width={20} height={20} style={{ objectFit: 'contain' }} />
-)
 
 export function RegisterPage() {
   const { setSession } = useAuth()
@@ -95,13 +87,14 @@ export function RegisterPage() {
         <div>
           <Link to="/" className="auth-back-link">← العودة لاختيار الدور</Link>
           <div className="auth-breadcrumb" style={{ marginTop: 3 }}>
-            <Link to="/student/login">التسجيل</Link>
+            <Link to="/student/login">تسجيل الدخول</Link>
             <span className="auth-breadcrumb-sep">/</span>
-            <span style={{ color: 'var(--text-light)' }}>الطالب</span>
+            <span style={{ color: 'var(--text-light)' }}>إنشاء حساب</span>
           </div>
         </div>
       }
-      roleEyebrow={{ label: 'بوابة طالب', icon: <RoleIco src={iconPerson} /> }}
+      eyebrow="بوابة الطالب"
+      footer={<>لديك حساب بالفعل؟ <Link to="/student/login">تسجيل الدخول</Link></>}
     >
       <div className="auth-heading">
         <h1>مسيرتك تبدأ من هنا</h1>
@@ -144,10 +137,6 @@ export function RegisterPage() {
           ← إنشاء حساب طالب
         </Button>
       </form>
-
-      <div className="auth-form-footer">
-        لديك حساب بالفعل؟ <Link to="/student/login">تسجيل الدخول</Link>
-      </div>
     </AuthLayout>
   )
 }

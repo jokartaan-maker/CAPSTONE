@@ -1,0 +1,276 @@
+/* ============================================================
+   AuthLayout — Clean Split Design
+   Left: dark navy gradient panel  |  Right: white form side
+   ============================================================ */
+
+/* ── Shell ── */
+.al-shell {
+  display: flex;
+  flex-direction: row;
+  min-height: 100vh;
+  height: 100vh;
+  overflow: hidden;
+  direction: rtl;
+  background: #f0f2f5;
+}
+
+/* ══════════════════════════════════════
+   LEFT PANEL
+══════════════════════════════════════ */
+.al-panel {
+  flex: 0 0 42%;
+  max-width: 500px;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  padding: 36px 40px 28px;
+  overflow: hidden;
+
+  /* gradient نظيف بدون صورة */
+  background: linear-gradient(
+    155deg,
+    #0b1f35 0%,
+    #0e2d4f 35%,
+    #0a2642 65%,
+    #071c32 100%
+  );
+}
+
+/* ── blob decorations ── */
+.al-panel::before {
+  content: '';
+  position: absolute;
+  width: 380px;
+  height: 380px;
+  top: -160px;
+  right: -140px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(59,130,246,0.14) 0%, transparent 68%);
+  pointer-events: none;
+}
+.al-panel::after {
+  content: '';
+  position: absolute;
+  width: 300px;
+  height: 300px;
+  bottom: -100px;
+  left: -100px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(99,102,241,0.10) 0%, transparent 68%);
+  pointer-events: none;
+}
+
+/* ── subtle grid pattern ── */
+.al-panel > * { position: relative; z-index: 1; }
+
+/* ── Header: logo + brand ── */
+.al-panel-header {
+  margin-bottom: 0;
+  position: relative;
+  z-index: 2;
+}
+
+/* ── Body: icon + title + sub ── */
+.al-panel-body {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 0;
+}
+
+.al-panel-icon {
+  width: 56px;
+  height: 56px;
+  border-radius: 14px;
+  background: rgba(255,255,255,0.08);
+  border: 1px solid rgba(255,255,255,0.12);
+  display: grid;
+  place-items: center;
+  margin-bottom: 24px;
+}
+
+.al-panel-title {
+  font-size: clamp(26px, 2.8vw, 34px);
+  font-weight: 800;
+  color: #ffffff;
+  line-height: 1.28;
+  margin-bottom: 16px;
+  letter-spacing: -0.4px;
+}
+
+.al-panel-sub {
+  font-size: 13.5px;
+  color: rgba(180, 210, 240, 0.72);
+  line-height: 1.85;
+  font-weight: 400;
+  max-width: 300px;
+}
+
+/* ── Features list ── */
+.al-panel-features {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 28px;
+}
+
+.al-feature {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 12.5px;
+  color: rgba(190, 215, 240, 0.78);
+  font-weight: 400;
+}
+
+.al-feature-icon {
+  width: 30px;
+  height: 30px;
+  border-radius: 8px;
+  background: rgba(255,255,255,0.07);
+  border: 1px solid rgba(255,255,255,0.10);
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+  color: rgba(180,210,255,0.75);
+}
+
+/* ── Panel footer ── */
+.al-panel-footer {
+  padding-top: 20px;
+  border-top: 1px solid rgba(255,255,255,0.08);
+}
+.al-panel-footer-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 10.5px;
+  color: rgba(180,210,240,0.45);
+  letter-spacing: 0.2px;
+}
+.al-panel-footer-pill::before {
+  content: '';
+  display: inline-block;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: rgba(100,180,255,0.4);
+  flex-shrink: 0;
+}
+
+/* ══════════════════════════════════════
+   RIGHT FORM SIDE
+══════════════════════════════════════ */
+.al-form-side {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  background: #f7f8fa;
+  direction: rtl;
+}
+
+/* ── Topbar ── */
+.al-topbar {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 clamp(24px, 5vw, 60px);
+  height: 58px;
+  background: #ffffff;
+  border-bottom: 1px solid #e8eaed;
+}
+.al-topbar-year {
+  font-size: 11px;
+  color: #9aabb5;
+}
+
+/* ── Scroll area ── */
+.al-scroll {
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 32px clamp(20px, 5vw, 60px) 20px;
+}
+
+/* ── Form box ── */
+.al-box {
+  width: 100%;
+  max-width: 460px;
+}
+
+/* ── Back link wrapper ── */
+.al-back-wrap {
+  margin-bottom: 20px;
+}
+
+/* ── Eyebrow ── */
+.al-eyebrow {
+  font-size: 11px;
+  font-weight: 600;
+  color: #3b7dd8;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  margin-bottom: 8px;
+}
+
+/* ── Secure note ── */
+.al-secure-note {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 10px;
+  color: #9aabb5;
+  margin-top: 20px;
+  justify-content: center;
+}
+.al-secure-note svg { flex-shrink: 0; opacity: 0.5; }
+
+/* ── Footer row ── */
+.al-footer-row {
+  margin-top: 18px;
+  text-align: center;
+  font-size: 12.5px;
+  color: #6b7c88;
+  line-height: 1.8;
+}
+.al-footer-row a {
+  color: #0e2d4f;
+  font-weight: 700;
+}
+.al-footer-row a:hover { text-decoration: underline; }
+
+/* ── Page footer ── */
+.al-page-footer {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px clamp(24px, 5vw, 60px);
+  border-top: 1px solid #e8eaed;
+  background: #ffffff;
+  font-size: 10px;
+  color: #9aabb5;
+  gap: 12px;
+}
+.al-page-footer-links { display: flex; align-items: center; gap: 8px; }
+.al-page-footer a { color: #9aabb5; text-decoration: none; }
+.al-page-footer a:hover { color: #0d2234; text-decoration: underline; }
+
+/* ══════════════════════════════════════
+   RESPONSIVE
+══════════════════════════════════════ */
+@media (max-width: 860px) {
+  .al-panel { display: none; }
+}
+@media (max-width: 540px) {
+  .al-scroll { padding: 24px 18px 16px; }
+  .al-topbar { padding: 0 18px; }
+  .al-page-footer { padding: 10px 18px; }
+}

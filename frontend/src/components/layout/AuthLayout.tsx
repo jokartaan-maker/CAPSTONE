@@ -1,168 +1,150 @@
 import { type ReactNode } from 'react'
-import { Uni } from '../../components/ui/Uni'
-import sidebarBg from '../../assets/images/background.png'
-import {
-  iconPerson,       // فكرة  — شخص (بداية الرحلة)
-  iconGradCap,      // إشراف — قبعة تخرج
-  iconShieldCheck,  // إنجاز  — درع + صح
-  iconShield,       // بيانات محمية — درع بسيط
-  iconInfo,         // الدعم والمساعدة — دائرة info
-     // أيقونة الجامعة — بناية
-} from '../../assets/icons'
-
-const Ico = ({
-  src,
-  size = 14,
-  opacity = 1,
-  white = false,
-}: {
-  src: string
-  size?: number
-  opacity?: number
-  white?: boolean   // يحوّل الأيقونة الداكنة لبيضاء (على خلفية داكنة)
-}) => (
-  <img
-    src={src}
-    alt=""
-    width={size}
-    height={size}
-    style={{
-      objectFit: 'contain',
-      opacity,
-      filter: white ? 'brightness(0) invert(1)' : undefined,
-      display: 'block',
-    }}
-  />
-)
+import { CapstoneLogotype } from '../../components/ui/CapstoneLogotype'
+import './AuthLayout.css'
 
 interface AuthLayoutProps {
   children:     ReactNode
-  roleEyebrow?: { label: string; icon: ReactNode }
+  eyebrow?:     string
   topLink?:     ReactNode
   footer?:      ReactNode
+  roleEyebrow?: unknown
 }
 
-export function AuthLayout({ children, roleEyebrow, topLink, footer }: AuthLayoutProps) {
+export function AuthLayout({ children, eyebrow, topLink, footer }: AuthLayoutProps) {
   return (
-    <div className="auth-shell" dir="rtl">
+    <div className="al-shell" dir="rtl">
 
-      {/* ══ SIDEBAR ══ */}
-      <aside
-        className="auth-sidebar"
-        style={{
-          backgroundImage:    `url(${sidebarBg})`,
-          backgroundSize:     'cover',
-          backgroundPosition: 'center top',
-        }}
-      >
-        <div className="auth-sidebar-overlay" />
+      {/* ══════════ PANEL: LEFT ══════════ */}
+      <div className="al-panel">
 
-        {/* logo */}
-        <div className="auth-sidebar-logo">
-          
+        {/* header: شعار */}
+        <div className="al-panel-header">
+          <CapstoneLogotype variant="white" height={38} />
         </div>
 
-        {/* headline */}
-        <div className="auth-sidebar-headline">
-        
-          <p>بيئة أكاديمية تجمع الطلبة والمشرفين واللجنة العلمية، لتنظيم كل خطوة في رحلة مشروع التخرج.</p>
-        </div>
+        {/* body: أيقونة + عنوان + وصف */}
+        <div className="al-panel-body">
 
-        {/* progress steps */}
-        <div className="auth-sidebar-progress">
-          <div className="asp-header">
-            <span className="asp-title">رحلتك نحو الإنجاز</span>
-            <span className="asp-badge">مسار متكامل</span>
+          <div className="al-panel-icon">
+            <svg width="32" height="32" viewBox="0 0 24 24" fill="none"
+              stroke="rgba(255,255,255,0.85)" strokeWidth="1.5"
+              strokeLinecap="round" strokeLinejoin="round">
+              <path d="M22 10v6M2 10l10-5 10 5-10 5z"/>
+              <path d="M6 12v5c3.33 1.67 8.67 1.67 12 0v-5"/>
+            </svg>
           </div>
-          <div className="asp-bar-wrap"><div className="asp-bar" /></div>
-          <div className="asp-steps">
-            {/* فكرة — شخص (بداية / تشكيل الفريق) */}
-            <div className="asp-step">
-              <div className="asp-step-icon active">
-                <Ico src={iconPerson} size={15} white />
-              </div>
-              <span>فكرة</span>
-            </div>
-            {/* إشراف — قبعة تخرج */}
-            <div className="asp-step">
-              <div className="asp-step-icon">
-                <Ico src={iconGradCap} size={15} white />
-              </div>
-              <span>إشراف</span>
-            </div>
-            {/* إنجاز — درع + صح */}
-            <div className="asp-step">
-              <div className="asp-step-icon">
-                <Ico src={iconShieldCheck} size={15} white />
-              </div>
-              <span>إنجاز</span>
-            </div>
-          </div>
+
+          <h2 className="al-panel-title">منصة إدارة<br />مشاريع التخرج</h2>
+
+          <p className="al-panel-sub">
+            بيئة أكاديمية متكاملة تجمع الطلبة
+            والمشرفين واللجنة العلمية في مكان واحد.
+          </p>
         </div>
 
-        {/* sidebar bottom note */}
-        <div className="auth-sidebar-footer">
-          <Ico src={iconShieldCheck} size={12} white opacity={0.55} />
-          <span>مساحة أكاديمية آمنة وموثوقة</span>
-        </div>
-      </aside>
-
-      {/* ══ MAIN ══ */}
-      <main className="auth-main">
-        <div className="auth-content">
-          <div className="auth-box">
-
-            {/* top bar */}
-            <div className="auth-box-topbar">
-              {/* يسار: دعم */}
-              <button className="auth-support-btn">
-                <Ico src={iconInfo} size={13} opacity={0.55} />
-                <span>الدعم والمساعدة</span>
-              </button>
-              {/* يمين: جامعة */}
-               <div className="db-topbar-univ">
-                        <Uni height={34} />
-                      </div>
-              
+        {/* features list */}
+        <div className="al-panel-features">
+          {[
+            {
+              label: 'تشكيل الفرق وإدارة الأعضاء',
+              icon: (
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none"
+                  stroke="currentColor" strokeWidth="2.2"
+                  strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+                  <circle cx="9" cy="7" r="4"/>
+                  <path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/>
+                </svg>
+              ),
+            },
+            {
+              label: 'متابعة تقدم المشروع خطوة بخطوة',
+              icon: (
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none"
+                  stroke="currentColor" strokeWidth="2.2"
+                  strokeLinecap="round" strokeLinejoin="round">
+                  <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/>
+                </svg>
+              ),
+            },
+            {
+              label: 'التواصل المباشر مع المشرف الأكاديمي',
+              icon: (
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none"
+                  stroke="currentColor" strokeWidth="2.2"
+                  strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+                </svg>
+              ),
+            },
+            {
+              label: 'اعتماد المقترحات من اللجنة العلمية',
+              icon: (
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none"
+                  stroke="currentColor" strokeWidth="2.2"
+                  strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+                </svg>
+              ),
+            },
+          ].map((f, i) => (
+            <div key={i} className="al-feature">
+              <div className="al-feature-icon">{f.icon}</div>
+              <span>{f.label}</span>
             </div>
+          ))}
+        </div>
 
-            {/* back link */}
-            {topLink && (
-              <div style={{ marginBottom: 16 }}>{topLink}</div>
-            )}
+        {/* panel footer */}
+        <div className="al-panel-footer">
+          <span className="al-panel-footer-pill">Capstone · 2027–2026</span>
+        </div>
 
-            {/* role eyebrow */}
-            {roleEyebrow && (
-              <div className="auth-role-eyebrow">
-                <div className="auth-role-icon-wrap">{roleEyebrow.icon}</div>
-                <span className="auth-role-label">{roleEyebrow.label}</span>
-              </div>
-            )}
+      </div>
+
+      {/* ══════════ FORM SIDE: RIGHT ══════════ */}
+      <div className="al-form-side">
+
+        {/* topbar */}
+        <div className="al-topbar">
+          <CapstoneLogotype height={36} />
+          <span className="al-topbar-year">العام الأكاديمي 2026–2027</span>
+        </div>
+
+        {/* scrollable area */}
+        <div className="al-scroll">
+          <div className="al-box">
+
+            {topLink && <div className="al-back-wrap">{topLink}</div>}
+            {eyebrow  && <p className="al-eyebrow">{eyebrow}</p>}
 
             {children}
 
-            {footer && <div className="auth-form-footer">{footer}</div>}
+            {footer && <div className="al-footer-row">{footer}</div>}
 
-            {/* uni protection note */}
-            <div className="auth-uni-note">
-              <Ico src={iconShield} size={11} opacity={0.4} />
-              <span>بياناتك محمية ضمن البيئة الجامعية</span>
+            <div className="al-secure-note">
+              <svg width="11" height="11" viewBox="0 0 24 24" fill="none"
+                stroke="currentColor" strokeWidth="2"
+                strokeLinecap="round" strokeLinejoin="round">
+                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+              </svg>
+              بياناتك محمية ضمن البيئة الجامعية الآمنة
             </div>
 
           </div>
         </div>
 
         {/* page footer */}
-        <footer className="auth-page-footer">
-          <span>© 2026 Capstone · جميع الحقوق محفوظة</span>
-          <div className="auth-page-footer-links">
+        <div className="al-page-footer">
+          <span>© 2027-2026 Capstone — جميع الحقوق محفوظة</span>
+          <div className="al-page-footer-links">
             <a href="#">سياسة الخصوصية</a>
             <span>·</span>
             <a href="#">العربية</a>
           </div>
-        </footer>
-      </main>
+        </div>
 
+      </div>
     </div>
   )
 }

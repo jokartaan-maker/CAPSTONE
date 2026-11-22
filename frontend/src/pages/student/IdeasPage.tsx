@@ -3,7 +3,9 @@ import { Link } from 'react-router-dom'
 import './IdeasPage.css'
 import { MOCK_IDEAS } from '../../data/ideas'
 import type { Idea } from '../../types/api'
-import { UnivLogo } from '../../components/ui/UnivLogo'
+import { CapstoneLogotype } from '../../components/ui/CapstoneLogotype'
+import { IdeasPageSkeleton } from '../../components/ui/Skeleton'
+import { usePageLoader } from '../../hooks/usePageLoader'
 
 /* ================================================================
    Custom Dropdown
@@ -483,6 +485,8 @@ function IdeaCard({ idea }: { idea: Idea }) {
 
   return (
     <div className={`idea-card${badge ? ' idea-card-yours' : ''}`}>
+
+      {/* ── Head: status + code ── */}
       <div className="idea-card-head">
         <div className="idea-card-meta">
           {badge && <span className={badge.cls}>{badge.label}</span>}
@@ -491,42 +495,47 @@ function IdeaCard({ idea }: { idea: Idea }) {
             {st.text}
           </span>
         </div>
-        <div className="idea-card-code">
-          <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-            strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" style={{ opacity: .4 }}>
-            <circle cx="12" cy="12" r="10"/>
-            <line x1="12" y1="8"  x2="12"    y2="12"/>
-            <line x1="12" y1="16" x2="12.01" y2="16"/>
-          </svg>
-          {idea.code}
+        <span className="idea-card-code">{idea.code}</span>
+      </div>
+
+      {/* ── Title + field ── */}
+      <div className="idea-card-field">{idea.field}</div>
+      <h3 className="idea-card-title">{idea.title}</h3>
+      <p  className="idea-card-desc">{idea.description.slice(0, 100)}…</p>
+
+      {/* ── Supervisor box ── */}
+      <div className="idea-card-supervisor">
+        <div className="idea-card-sup-avatar">
+          {idea.supervisor.split(' ').slice(-1)[0]?.[0] ?? 'م'}
+        </div>
+        <div className="idea-card-sup-info">
+          <span className="idea-card-sup-label">المشرف الأكاديمي</span>
+          <span className="idea-card-sup-name">{idea.supervisor}</span>
         </div>
       </div>
 
-      <h3 className="idea-card-title">{idea.title}</h3>
-      <p  className="idea-card-desc">{idea.description.slice(0, 90)}…</p>
-
-      <div className="idea-card-supervisor">
-        <span className="idea-card-supervisor-label">المشرف</span>
-        <span className="idea-card-supervisor-name">{idea.supervisor}</span>
-      </div>
-
+      {/* ── Tags ── */}
       <div className="idea-card-tags">
-        {idea.tags.map(t => <span key={t} className="idea-tag">{t}</span>)}
+        {idea.tags.slice(0, 3).map(t => <span key={t} className="idea-tag">{t}</span>)}
+        {idea.tags.length > 3 && (
+          <span className="idea-tag idea-tag-more">+{idea.tags.length - 3}</span>
+        )}
       </div>
 
+      {/* ── Footer ── */}
       <div className="idea-card-footer">
         <span className="idea-card-teams">
           {idea.status === 'pending'
             ? 'قيد مراجعة اللجنة'
             : openTeams > 0
-              ? 'فريق واحد مناح'
+              ? `${openTeams} فريق متاح`
               : idea.teams.length === 0
                 ? 'التسجيل مفتوح'
                 : 'الفرق مكتملة'}
         </span>
         {idea.status === 'approved' ? (
           <Link to={`/student/ideas/${idea.id}`} className="idea-card-cta">
-            تفاصيل الفكرة
+            عرض التفاصيل
           </Link>
         ) : (
           <span className="idea-card-cta-disabled">قيد المراجعة</span>
@@ -540,13 +549,12 @@ function IdeaCard({ idea }: { idea: Idea }) {
    IdeasPage
    ================================================================ */
 export function IdeasPage() {
+  const loading = usePageLoader(380)
   const [search,     setSearch]     = useState('')
   const [activeTab,  setActiveTab]  = useState('كل الأفكار')
   const [supervisor, setSupervisor] = useState('جميع المشرفين')
   const [page,       setPage]       = useState(1)
   const [showModal,  setShowModal]  = useState(false)
-
-  /* الأفكار المضافة من الطالب (pending) */
   const [myIdeas, setMyIdeas] = useState<Idea[]>([])
 
   const allIdeas = useMemo(() => [...myIdeas, ...MOCK_IDEAS], [myIdeas])
@@ -572,6 +580,8 @@ export function IdeasPage() {
     setMyIdeas(prev => [idea, ...prev])
   }
 
+  if (loading) return <IdeasPageSkeleton />
+
   return (
     <div className="db-wrap">
       {showModal && (
@@ -584,13 +594,14 @@ export function IdeasPage() {
       {/* ── Topbar ── */}
       <header className="db-topbar">
         <div className="db-topbar-breadcrumb">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{opacity:.5, flexShrink:0}}>
+            <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/>
+          </svg>
           <Link to="/student/dashboard">مساحة الطالب</Link>
           <span className="db-topbar-sep">/</span>
           <span className="db-topbar-current">بنك الأفكار</span>
         </div>
-        <div className="db-topbar-univ">
-          <UnivLogo height={34} />
-        </div>
+        <CapstoneLogotype height={36} />
       </header>
 
       {/* ── Body ── */}
@@ -600,18 +611,20 @@ export function IdeasPage() {
         {/* heading + CTA */}
         <div className="ideas-page-head">
           <div>
-            <h1 className="db-page-title">بنك الأفكار المعتمدة</h1>
-            <p className="db-page-sub">
-              استكشف أفكار اللجنة العلمية، وقارن الفرق المتاحة قبل اختيار مسارك.
-            </p>
+            <div className="ideas-page-eyebrow">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+              </svg>
+              أفكار المشاريع المعتمدة
+            </div>
+            <h1 className="db-page-title">بنك الأفكار</h1>
+            <p className="db-page-sub">استكشف أفكار اللجنة العلمية وقارن الفرق المتاحة قبل اختيار مسارك.</p>
           </div>
-          <button className="btn btn-primary" onClick={() => setShowModal(true)}>
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-              strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-              <line x1="12" y1="5" x2="12" y2="19"/>
-              <line x1="5" y1="12" x2="19" y2="12"/>
+          <button className="btn btn-primary ideas-submit-btn" onClick={() => setShowModal(true)}>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+              <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
             </svg>
-            طرح فكرة
+            طرح فكرة جديدة
           </button>
         </div>
 
