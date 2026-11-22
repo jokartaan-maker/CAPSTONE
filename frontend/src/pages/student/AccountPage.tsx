@@ -9,13 +9,9 @@ import { Input, PasswordInput, CustomSelect } from '../../components/ui/controls
 import { SkillsInput } from '../../components/ui/SkillsInput'
 import { Button } from '../../components/ui/Button'
 import { Alert } from '../../components/ui/Alert'
-import { Spinner } from '../../components/ui/Spinner'
-import { UnivLogo } from '../../components/ui/UnivLogo'
-
-import {
-  
-  iconShieldCheck,
-} from '../../assets/icons/index'
+import { AccountPageSkeleton } from '../../components/ui/Skeleton'
+import { CapstoneLogotype } from '../../components/ui/CapstoneLogotype'
+import { usePageLoader } from '../../hooks/usePageLoader'
 import type { RegisterOptions, StudentProfile, UpdateProfilePayload } from '../../types/api'
 
 const PASS_HINT = '8 أحرف: حرف كبير + صغير + رقم + رمز، وتختلف عن الحالية'
@@ -124,7 +120,9 @@ export function AccountPage() {
   /* ── profile state ── */
   const [profile, setProfile]     = useState<StudentProfile | null>(null)
   const [options, setOptions]     = useState<RegisterOptions | null>(null)
-  const [loading, setLoading]     = useState(true)
+  const [apiFetched, setApiFetched] = useState(false)   // API انتهى؟
+  const pageReady  = usePageLoader(300)                  // 300ms minimum
+  const loading    = !apiFetched || pageReady            // كلاهما لازم ينتهي
   const [editing, setEditing]     = useState(false)
   const [name, setName]           = useState('')
   const [phone, setPhone]         = useState('')
@@ -165,7 +163,7 @@ export function AccountPage() {
         setProfile(prof.student)
         setOptions(opts)
       } catch { /* handled by context */ }
-      finally { setLoading(false) }
+      finally { setApiFetched(true) }
     })()
     return () => { if (savedTimer.current) clearTimeout(savedTimer.current) }
   }, [])
@@ -239,7 +237,7 @@ export function AccountPage() {
   }
 
   /* ── Loading ── */
-  if (loading) return <Spinner variant="page" label="جارٍ التحميل..." />
+  if (loading) return <AccountPageSkeleton />
 
   const initials = profile?.name.split(' ').slice(0, 2).map(w => w[0]).join('').toUpperCase() ?? '؟'
 
@@ -249,13 +247,14 @@ export function AccountPage() {
       {/* ── Topbar ── */}
       <header className="account-topbar">
         <nav className="account-topbar-breadcrumb" aria-label="مسار التنقل">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{opacity:.5}}>
+            <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/>
+          </svg>
           <Link to="/student/dashboard">مساحة الطالب</Link>
           <span className="account-topbar-sep">/</span>
           <span className="account-topbar-current">حسابي والإشعارات</span>
         </nav>
-        <div className="account-topbar-univ">
-          <UnivLogo height={34} />
-        </div>
+        <CapstoneLogotype height={36} />
       </header>
 
       {/* ── Scrollable body ── */}
@@ -264,6 +263,12 @@ export function AccountPage() {
 
           {/* Page heading */}
           <div className="account-page-head">
+            <div className="account-page-eyebrow">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>
+              </svg>
+              إعدادات الحساب
+            </div>
             <h1 className="account-page-title">حسابي والإشعارات</h1>
             <p className="account-page-sub">
               إدارة ملفك الجامعي وأمان الحساب، ومتابعة تنبيهات البريد والتذكير بمواعيد التسليم.
@@ -348,8 +353,9 @@ export function AccountPage() {
 
                 {passSuccess && (
                   <div className="acct-pass-ok">
-                    <img src={iconShieldCheck} alt="" width={15} height={15}
-                      style={{ filter: 'brightness(0)', opacity: .6 }} />
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                      <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+                    </svg>
                     {passSuccess}
                   </div>
                 )}

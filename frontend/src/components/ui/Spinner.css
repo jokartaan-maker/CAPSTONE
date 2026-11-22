@@ -1,102 +1,205 @@
 /* ============================================================
-   Spinner — three variants: page | inline | overlay
+   Spinner — page | inline | overlay
    ============================================================ */
 
-/* ── base wrapper ── */
-.spinner {
+/* ══════════════════════════════════════
+   PAGE VARIANT — full branded screen
+══════════════════════════════════════ */
+.sp-page {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0;
+  background: linear-gradient(
+    160deg,
+    #0b1f35 0%,
+    #0e2d4f 50%,
+    #071c32 100%
+  );
+  /* subtle blobs */
+  overflow: hidden;
+}
+
+/* blob decorations */
+.sp-page::before,
+.sp-page::after {
+  content: '';
+  position: absolute;
+  border-radius: 50%;
+  pointer-events: none;
+}
+.sp-page::before {
+  width: 500px; height: 500px;
+  top: -200px; right: -150px;
+  background: radial-gradient(circle, rgba(59,130,246,.10) 0%, transparent 65%);
+}
+.sp-page::after {
+  width: 400px; height: 400px;
+  bottom: -150px; left: -120px;
+  background: radial-gradient(circle, rgba(99,102,241,.08) 0%, transparent 65%);
+}
+
+/* ── Logo lockup ── */
+.sp-page-logo {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  margin-bottom: 44px;
+  position: relative;
+  z-index: 1;
+  animation: sp-fade-down .55s cubic-bezier(.22,.68,0,1.2) both;
+}
+.sp-page-logo-img {
+  height: 44px;
+  width: auto;
+  filter: brightness(0) invert(1);
+  opacity: .88;
+}
+.sp-page-brand {
+  font-size: 26px;
+  font-weight: 800;
+  color: rgba(255,255,255,.92);
+  letter-spacing: -.3px;
+  font-family: var(--font);
+}
+
+/* ── Animated bars ── */
+.sp-bars {
+  display: flex;
+  align-items: flex-end;
+  gap: 5px;
+  height: 36px;
+  position: relative;
+  z-index: 1;
+  margin-bottom: 28px;
+}
+.sp-bar {
+  display: block;
+  width: 4px;
+  border-radius: 999px;
+  background: rgba(255,255,255,.75);
+  animation: sp-bounce 1.1s ease-in-out infinite;
+  animation-delay: calc(var(--i) * 0.13s);
+  transform-origin: bottom center;
+}
+/* heights cycle: short → tall → short */
+.sp-bar:nth-child(1) { height: 14px; }
+.sp-bar:nth-child(2) { height: 22px; }
+.sp-bar:nth-child(3) { height: 30px; }
+.sp-bar:nth-child(4) { height: 22px; }
+.sp-bar:nth-child(5) { height: 14px; }
+
+@keyframes sp-bounce {
+  0%, 100% { transform: scaleY(0.45); opacity: .35; }
+  50%       { transform: scaleY(1);   opacity: 1;   }
+}
+
+/* ── Page labels ── */
+.sp-page-label {
+  font-size: 13px;
+  font-weight: 600;
+  color: rgba(200,220,240,.78);
+  letter-spacing: .2px;
+  font-family: var(--font);
+  margin: 0;
+  position: relative;
+  z-index: 1;
+  animation: sp-fade-up .6s .2s both;
+}
+.sp-page-tagline {
+  font-size: 10.5px;
+  color: rgba(180,210,240,.38);
+  font-family: var(--font);
+  letter-spacing: .5px;
+  margin: 8px 0 0;
+  position: relative;
+  z-index: 1;
+  animation: sp-fade-up .6s .35s both;
+}
+
+/* ── Entry animations ── */
+@keyframes sp-fade-down {
+  from { opacity: 0; transform: translateY(-12px); }
+  to   { opacity: 1; transform: translateY(0);     }
+}
+@keyframes sp-fade-up {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0);   }
+}
+
+/* ══════════════════════════════════════
+   SHARED RING (inline + overlay)
+══════════════════════════════════════ */
+.sp-ring {
+  display: block;
+  border-radius: 50%;
+  border-style: solid;
+  border-color: rgba(14,45,79,.12);
+  border-top-color: #0e2d4f;
+  animation: sp-spin .7s linear infinite;
+  flex-shrink: 0;
+}
+.sp-ring--sm { width: 18px; height: 18px; border-width: 2px;   }
+.sp-ring--md { width: 28px; height: 28px; border-width: 3px;   }
+.sp-ring--lg { width: 44px; height: 44px; border-width: 3.5px; }
+
+@keyframes sp-spin { to { transform: rotate(360deg); } }
+
+/* ── Shared label ── */
+.sp-label {
+  font-size: 11.5px;
+  font-weight: 600;
+  color: #6b7c88;
+  font-family: var(--font);
+}
+
+/* ══════════════════════════════════════
+   INLINE VARIANT
+══════════════════════════════════════ */
+.sp-inline {
   display: inline-flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 12px;
+  gap: 10px;
+  width: 100%;
+  padding: 40px 16px;
 }
+.sp-inline--sm { padding: 24px 12px; gap: 7px; }
+.sp-inline--lg { padding: 56px 16px; gap: 14px; }
+.sp-inline--sm .sp-label { font-size: 10px; }
+.sp-inline--lg .sp-label { font-size: 13px; }
 
-/* ── ring ── */
-.spinner-ring {
-  border-radius: 50%;
-  animation: spinner-spin .75s linear infinite;
-  flex-shrink: 0;
-}
-
-/* size: md (default) */
-.spinner-ring {
-  width: 32px; height: 32px;
-  border: 3px solid rgba(13, 34, 52, .1);
-  border-top-color: var(--navy-mid);
-}
-
-/* size: sm */
-.spinner--sm .spinner-ring {
-  width: 20px; height: 20px;
-  border-width: 2.5px;
-}
-
-/* size: lg */
-.spinner--lg .spinner-ring {
-  width: 48px; height: 48px;
-  border-width: 4px;
-}
-
-/* ── label ── */
-.spinner-label {
-  font-size: 11.5px;
-  font-weight: 600;
-  color: var(--text-muted);
-  letter-spacing: .2px;
-}
-.spinner--sm .spinner-label { font-size: 10px; }
-.spinner--lg .spinner-label { font-size: 13px; }
-
-/* ── variant: page (centred in full viewport) ── */
-.spinner--page {
-  position: fixed;
+/* ══════════════════════════════════════
+   OVERLAY VARIANT
+══════════════════════════════════════ */
+.sp-overlay {
+  position: absolute;
   inset: 0;
   display: flex;
   align-items: center;
   justify-content: center;
-  flex-direction: column;
-  gap: 14px;
-  background: var(--bg);
-  z-index: 999;
+  background: rgba(247,248,250,.82);
+  backdrop-filter: blur(3px);
+  z-index: 50;
+  border-radius: inherit;
 }
-.spinner--page .spinner-ring {
-  width: 42px; height: 42px;
-  border-width: 3.5px;
-  border-color: rgba(18, 59, 91, .12);
-  border-top-color: var(--navy-mid);
-}
-.spinner--page .spinner-label {
-  font-size: 12px;
-  color: var(--text-muted);
-}
-
-/* ── variant: inline (in a card / section) ── */
-.spinner--inline {
-  width: 100%;
-  padding: 40px 0;
+.sp-overlay-inner {
   display: flex;
-  align-items: center;
-  justify-content: center;
   flex-direction: column;
+  align-items: center;
   gap: 10px;
 }
 
-/* ── variant: overlay (over a card, relative parent) ── */
-.spinner--overlay {
-  position: absolute;
-  inset: 0;
-  background: rgba(245, 242, 235, .75);
-  backdrop-filter: blur(2px);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-direction: column;
-  gap: 12px;
-  border-radius: inherit;
-  z-index: 10;
-}
-
-/* ── animation ── */
-@keyframes spinner-spin {
-  to { transform: rotate(360deg); }
+/* ── Reduced motion ── */
+@media (prefers-reduced-motion: reduce) {
+  .sp-bar    { animation: none; opacity: .6; }
+  .sp-ring   { animation-duration: 1.4s; }
+  .sp-page-logo,
+  .sp-page-label,
+  .sp-page-tagline { animation: none; opacity: 1; transform: none; }
 }

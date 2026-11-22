@@ -1,0 +1,58 @@
+/* ============================================================
+   PageProgress — top loading bar (YouTube / GitHub style)
+   ============================================================ */
+
+.pp-track {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  z-index: 10000;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.pp-bar {
+  position: absolute;
+  top: 0;
+  right: 0;              /* RTL: يبدأ من اليمين */
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    #3b82f6 0%,
+    #6366f1 60%,
+    #8b5cf6 100%
+  );
+  border-radius: 0 2px 2px 0;
+  transition:
+    width  .28s cubic-bezier(.4, 0, .2, 1),
+    opacity .22s ease .05s;
+  transform-origin: right center;
+}
+
+/* نقطة توهج في مقدمة الشريط */
+.pp-glow {
+  position: absolute;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: 80px;
+  height: 10px;
+  background: radial-gradient(
+    ellipse at center,
+    rgba(139,92,246,.7) 0%,
+    transparent 70%
+  );
+  pointer-events: none;
+  transition: left .28s cubic-bezier(.4, 0, .2, 1);
+}
+
+/* موبايل: أرفع قليلاً */
+@media (max-width: 540px) {
+  .pp-track { height: 2px; }
+}
+
+/* Reduced motion: أخفِ الشريط كلياً */
+@media (prefers-reduced-motion: reduce) {
+  .pp-track { display: none; }
+}

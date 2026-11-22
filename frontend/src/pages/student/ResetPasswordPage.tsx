@@ -7,11 +7,7 @@ import { AuthLayout } from '../../components/layout/AuthLayout'
 import { PasswordInput } from '../../components/ui/controls'
 import { Button } from '../../components/ui/Button'
 import { Alert } from '../../components/ui/Alert'
-import {  iconShieldCheck, iconHelp } from '../../assets/icons'
-
-const RoleIco = ({ src }: { src: string }) => (
-  <img src={src} alt="" width={20} height={20} style={{ objectFit: 'contain' }} />
-)
+import { iconShieldCheck } from '../../assets/icons'
 
 const IconLogIn = () => (
   <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
@@ -48,9 +44,7 @@ function StrengthBar({ password }: { password: string }) {
         ))}
       </div>
       {password && (
-        <div style={{ fontSize: 9.5, color: 'var(--text-muted)', marginBottom: 7, textAlign: 'right' }}>
-          كلمة مرور {labels[score]}
-        </div>
+        <div className="pass-strength-label">كلمة مرور {labels[score]}</div>
       )}
       <div className="pass-strength-checks">
         {checks.map((c, i) => (
@@ -123,11 +117,7 @@ export function ResetPasswordPage() {
   return (
     <AuthLayout
       topLink={<Link to="/student/login" className="auth-back-link">← العودة لتسجيل الدخول</Link>}
-      roleEyebrow={
-        success
-          ? { label: 'استعادة الحساب / اكتملت بنجاح',      icon: <RoleIco src={iconShieldCheck} /> }
-          : { label: 'استعادة الحساب / كلمة المرور الجديدة', icon: <RoleIco src={iconHelp} /> }
-      }
+      eyebrow={success ? 'استعادة الحساب — اكتملت بنجاح' : 'استعادة الحساب — كلمة مرور جديدة'}
     >
       {success ? (
         <div className="reset-success">
@@ -179,14 +169,17 @@ export function ResetPasswordPage() {
             />
 
             {passConf.length > 0 && password === passConf && (
-              <div className="pass-match-note">✓ كلمتا المرور متطابقتان</div>
+              <div className="pass-match-note">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                كلمتا المرور متطابقتان
+              </div>
             )}
 
             <Button type="submit" loading={submitting} className="btn-block" style={{ marginTop: 10 }}>
               ✓ حفظ كلمة المرور الجديدة
             </Button>
 
-            <div style={{ fontSize: 9.5, color: 'var(--text-muted)', textAlign: 'center', marginTop: 10 }}>
+            <div className="sent-hint" style={{ textAlign: 'center', marginTop: 10 }}>
               بعد الحفظ، ستحتاج إلى الدخول بكلمة المرور الجديدة.
             </div>
           </form>

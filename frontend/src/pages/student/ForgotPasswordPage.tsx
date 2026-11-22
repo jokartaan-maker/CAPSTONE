@@ -7,11 +7,7 @@ import { AuthLayout } from '../../components/layout/AuthLayout'
 import { Input } from '../../components/ui/controls'
 import { Button } from '../../components/ui/Button'
 import { Alert } from '../../components/ui/Alert'
-import {  iconHelp, iconMailCheck, iconShieldCheck } from '../../assets/icons'
-
-const RoleIco = ({ src }: { src: string }) => (
-  <img src={src} alt="" width={20} height={20} style={{ objectFit: 'contain' }} />
-)
+import { iconShieldCheck } from '../../assets/icons'
 
 const IconRefresh = () => (
   <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
@@ -67,7 +63,7 @@ function OtpInput({ value, onChange, disabled }: {
   }
 
   return (
-    <div style={{ display: 'flex', gap: 8, justifyContent: 'center', direction: 'ltr', margin: '20px 0' }}>
+    <div className="otp-row">
       {[0, 1, 2, 3, 4, 5].map(i => (
         <input
           key={i}
@@ -81,21 +77,7 @@ function OtpInput({ value, onChange, disabled }: {
           onKeyDown={e => handleKey(i, e)}
           onPaste={handlePaste}
           onFocus={e => e.target.select()}
-          style={{
-            width: 46, height: 54,
-            textAlign: 'center',
-            fontSize: 22,
-            fontWeight: 800,
-            fontFamily: 'var(--font)',
-            border: `1.5px solid ${digits[i] ? 'var(--navy-mid)' : 'var(--border)'}`,
-            borderRadius: 'var(--r-md)',
-            background: digits[i] ? '#f0f5fa' : 'var(--surface)',
-            color: 'var(--navy)',
-            outline: 'none',
-            transition: 'border-color .15s, background .15s',
-            cursor: disabled ? 'not-allowed' : 'text',
-            opacity: disabled ? 0.6 : 1,
-          }}
+          className={`otp-cell${digits[i] ? ' filled' : ''}`}
         />
       ))}
     </div>
@@ -181,20 +163,11 @@ export function ForgotPasswordPage() {
     }
   }
 
-  const eyebrowLabel =
-    step === 'otp'
-      ? 'استعادة الحساب / رمز التحقق'
-      : 'استعادة الحساب / البريد الإلكتروني'
-
-  const eyebrowIcon =
-    step === 'otp'
-      ? <RoleIco src={iconMailCheck} />
-      : <RoleIco src={iconHelp} />
 
   return (
     <AuthLayout
       topLink={<Link to="/student/login" className="auth-back-link">← العودة لتسجيل الدخول</Link>}
-      roleEyebrow={{ label: eyebrowLabel, icon: eyebrowIcon }}
+      eyebrow={step === 'otp' ? 'استعادة الحساب — رمز التحقق' : 'استعادة الحساب'}
     >
       {step === 'email' ? (
         // ════════════ خطوة 1: إدخال الإيميل ════════════
@@ -220,11 +193,9 @@ export function ForgotPasswordPage() {
               إرسال رمز التحقق
             </Button>
 
-            <div style={{ display: 'flex', alignItems: 'flex-start', gap: 6, marginTop: 10 }}>
-              <img src={iconShieldCheck} alt="" width={13} height={13} style={{ opacity: .4, marginTop: 2, flexShrink: 0 }} />
-              <span style={{ fontSize: 9.5, color: 'var(--text-muted)', lineHeight: 1.65 }}>
-                لأمان حسابك، ينتهي رمز التحقق بعد 10 دقائق ويمكن استخدامه مرة واحدة فقط.
-              </span>
+            <div className="fp-info-note">
+              <img src={iconShieldCheck} alt="" width={13} height={13} />
+              <span>لأمان حسابك، ينتهي رمز التحقق بعد 10 دقائق ويمكن استخدامه مرة واحدة فقط.</span>
             </div>
           </form>
 
@@ -249,7 +220,7 @@ export function ForgotPasswordPage() {
 
             <OtpInput value={otp} onChange={setOtp} disabled={submitting} />
 
-            <div className="sent-hint" style={{ textAlign: 'center', marginBottom: 20 }}>
+            <div className="otp-hint">
               الرمز صالح لمدة 10 دقائق.
             </div>
 
@@ -262,11 +233,11 @@ export function ForgotPasswordPage() {
               تحقق وتابع
             </Button>
 
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: 16 }}>
+            <div className="otp-actions-row">
               <button
                 type="button"
                 className="btn btn-ghost"
-                style={{ fontSize: 11, padding: '6px 10px', minHeight: 'unset' }}
+                style={{ fontSize: 12, padding: '6px 10px', minHeight: 'unset' }}
                 onClick={() => { setStep('email'); setOtp(''); setErrors({}) }}
               >
                 ← تعديل البريد
@@ -274,7 +245,7 @@ export function ForgotPasswordPage() {
               <button
                 type="button"
                 className="btn btn-ghost"
-                style={{ fontSize: 11, padding: '6px 10px', minHeight: 'unset', gap: 5 }}
+                style={{ fontSize: 12, padding: '6px 10px', minHeight: 'unset', gap: 5 }}
                 onClick={onResend}
                 disabled={submitting}
               >
