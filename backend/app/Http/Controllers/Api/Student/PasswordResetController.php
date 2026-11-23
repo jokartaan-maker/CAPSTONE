@@ -12,10 +12,15 @@ use App\Notifications\StudentPasswordChangedNotification;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 
 class PasswordResetController extends Controller
 {
+    private const OTP_MINUTES = 10;            // صلاحية الرمز
+    private const MAX_ATTEMPTS = 5;            // محاولات خاطئة قبل إلغاء الرمز
+    private const RESEND_COOLDOWN_SECONDS = 60; // أقل مدة بين رمزين لنفس الإيميل
+
     // POST /api/student/forgot-password
     // يولّد OTP ويرسله بالإيميل
     public function forgot(ForgotPasswordRequest $request): JsonResponse
@@ -25,21 +30,35 @@ class PasswordResetController extends Controller
         $student = Student::where('email', $email)->first();
 
         if ($student && $student->is_active) {
-            $otp = str_pad((string) random_int(0, 999999), 6, '0', STR_PAD_LEFT);
+            $existing = DB::table('student_otp_tokens')->where('email', $email)->first();
 
-            DB::table('student_otp_tokens')->updateOrInsert(
-                ['email' => $email],
-                [
-                    'otp'         => $otp,
-                    'reset_token' => null,
-                    'expires_at'  => now()->addMinutes(10),
-                    'verified_at' => null,
-                    'created_at'  => now(),
-                    'updated_at'  => now(),
-                ]
-            );
+            // إعادة الإرسال: رمز واحد كل 60 ثانية لنفس الإيميل
+            $tooSoon = $existing
+                && now()->diffInSeconds($existing->created_at, true) < self::RESEND_COOLDOWN_SECONDS;
 
-            $student->notify(new StudentOtpNotification($otp));
+            if (! $tooSoon) {
+                $otp = str_pad((string) random_int(0, 999999), 6, '0', STR_PAD_LEFT);
+
+                DB::table('student_otp_tokens')->updateOrInsert(
+                    ['email' => $email],
+                    [
+                        'otp'         => Hash::make($otp), // يُخزَّن كـ hash، لا كنص
+                        'attempts'    => 0,
+                        'reset_token' => null,
+                        'expires_at'  => now()->addMinutes(self::OTP_MINUTES),
+                        'verified_at' => null,
+                        'created_at'  => now(),
+                        'updated_at'  => now(),
+                    ]
+                );
+
+                try {
+                    $student->notify(new StudentOtpNotification($otp));
+                } catch (\Throwable $e) {
+                    // فشل الإرسال لا يغيّر الرد، حتى لا نكشف أن الإيميل مسجّل
+                    Log::error('OTP mail failed', ['email' => $email, 'error' => $e->getMessage()]);
+                }
+            }
         }
 
         return response()->json([
@@ -59,15 +78,25 @@ class PasswordResetController extends Controller
             ->where('email', $email)
             ->first();
 
+        $invalid = response()->json([
+            'message' => 'رمز التحقق غير صحيح أو منتهي الصلاحية',
+        ], 422);
+
+        // لا يوجد رمز، أو منتهٍ، أو استُخدم، أو استُنفدت المحاولات
         if (
             ! $record
-            || $record->otp !== $otp
             || now()->isAfter($record->expires_at)
             || $record->verified_at !== null
+            || $record->attempts >= self::MAX_ATTEMPTS
         ) {
-            return response()->json([
-                'message' => 'رمز التحقق غير صحيح أو منتهي الصلاحية',
-            ], 422);
+            return $invalid;
+        }
+
+        // رمز خاطئ: نزيد عدد المحاولات
+        if (! Hash::check($otp, $record->otp)) {
+            DB::table('student_otp_tokens')->where('email', $email)->increment('attempts');
+
+            return $invalid;
         }
 
         $resetToken = Str::random(64);
@@ -102,7 +131,7 @@ class PasswordResetController extends Controller
         if (
             ! $record
             || ! Hash::check($data['token'], $record->reset_token)
-            || now()->isAfter((new \Carbon\Carbon($record->expires_at))->addMinutes(10))
+            || now()->isAfter(\Illuminate\Support\Carbon::parse($record->expires_at)->addMinutes(self::OTP_MINUTES))
         ) {
             return response()->json([
                 'message' => 'جلسة إعادة التعيين غير صالحة، ابدأ من جديد',
