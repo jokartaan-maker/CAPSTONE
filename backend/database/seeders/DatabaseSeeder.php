@@ -8,6 +8,11 @@ class DatabaseSeeder extends Seeder
 {
     public function run(): void
     {
-        $this->call(StudentSeeder::class);
+        $this->call([
+            StudentSeeder::class,
+            AcademicTermSeeder::class,   // قبل الأفكار: كل فكرة تحتاج فصلاً
+            SupervisorSeeder::class,     // قبل الأفكار: كل فكرة معتمدة لها مشرف
+            IdeaSeeder::class,
+        ]);
     }
 }

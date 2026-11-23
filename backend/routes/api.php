@@ -3,6 +3,7 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\Student\AuthController;
+use App\Http\Controllers\Api\Student\IdeaController;
 use App\Http\Controllers\Api\Student\PasswordResetController;
 use App\Http\Controllers\Api\Student\ProfileController;
 
@@ -39,5 +40,9 @@ Route::prefix('student')->group(function () {
         Route::patch('profile', [ProfileController::class, 'update']);
         Route::put('profile/password', [ProfileController::class, 'changePassword'])
             ->middleware('throttle:5,1');
+
+        // بنك الأفكار
+        Route::get('ideas', [IdeaController::class, 'index']);
+        Route::get('ideas/{id}', [IdeaController::class, 'show'])->whereNumber('id');
     });
 });
