@@ -21,6 +21,7 @@ class Idea extends Model
         'status',
         'academic_term_id',
         'supervisor_id',
+        'proposed_by_student_id',
         'approved_at',
     ];
 
@@ -45,6 +46,12 @@ class Idea extends Model
     public function supervisor(): BelongsTo
     {
         return $this->belongsTo(Supervisor::class);
+    }
+
+    // الطالب الذي اقترح الفكرة
+    public function proposedBy(): BelongsTo
+    {
+        return $this->belongsTo(Student::class, 'proposed_by_student_id');
     }
 
     // ---------- Scopes (شروط جاهزة للاستعلام) ----------

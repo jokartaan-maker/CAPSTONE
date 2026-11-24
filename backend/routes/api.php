@@ -6,6 +6,7 @@ use App\Http\Controllers\Api\Student\AuthController;
 use App\Http\Controllers\Api\Student\IdeaController;
 use App\Http\Controllers\Api\Student\PasswordResetController;
 use App\Http\Controllers\Api\Student\ProfileController;
+use App\Http\Controllers\Api\Student\SupervisorController;
 
 Route::get('/user', function (Request $request) {
     return $request->user();
@@ -44,5 +45,10 @@ Route::prefix('student')->group(function () {
         // بنك الأفكار
         Route::get('ideas', [IdeaController::class, 'index']);
         Route::get('ideas/{id}', [IdeaController::class, 'show'])->whereNumber('id');
+
+        // اقتراح فكرة
+        Route::get('supervisors', [SupervisorController::class, 'index']);
+        Route::post('ideas', [IdeaController::class, 'store'])->middleware('throttle:10,1');
+        Route::get('my-ideas', [IdeaController::class, 'myIdeas']);
     });
 });

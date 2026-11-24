@@ -31,6 +31,8 @@ class IdeaResource extends JsonResource
             'approved_at'      => $this->approved_at?->toDateString(),
             'approved_by'      => $this->status === 'approved' ? 'اللجنة العلمية' : null,
             'academic_term'    => $this->academicTerm?->name,
+            'is_mine'          => $this->proposed_by_student_id !== null
+                && $this->proposed_by_student_id === $request->user()?->id,
         ];
     }
 }
