@@ -20,6 +20,9 @@ return [
     // أقصى عدد أعضاء في الفريق (مع القائد)
     'team_capacity' => 4,
 
+    // أقصى عدد طلبات انضمام معلّقة للطالب في نفس الوقت
+    'max_pending_join_requests' => 3,
+
     // رابط صفحة "كلمة مرور جديدة" في واجهة React
     'reset_password_url' => env('FRONTEND_URL', 'http://localhost:5173') . '/student/reset-password',
 

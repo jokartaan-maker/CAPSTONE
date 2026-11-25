@@ -4,6 +4,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\Student\AuthController;
 use App\Http\Controllers\Api\Student\IdeaController;
+use App\Http\Controllers\Api\Student\JoinRequestController;
 use App\Http\Controllers\Api\Student\PasswordResetController;
 use App\Http\Controllers\Api\Student\ProfileController;
 use App\Http\Controllers\Api\Student\SupervisorController;
@@ -55,5 +56,18 @@ Route::prefix('student')->group(function () {
         // الفرق
         Route::get('teams/explore', [TeamController::class, 'explore']);
         Route::post('teams', [TeamController::class, 'store'])->middleware('throttle:10,1');
+
+        // طلبات الانضمام والدعوات
+        Route::post('teams/{id}/join-requests', [JoinRequestController::class, 'send'])
+            ->whereNumber('id')->middleware('throttle:10,1');
+        Route::get('my-join-requests', [JoinRequestController::class, 'mine']);
+
+        Route::get('students/available', [JoinRequestController::class, 'availableStudents']);
+        Route::post('team/invitations', [JoinRequestController::class, 'invite'])->middleware('throttle:10,1');
+        Route::get('team/join-requests', [JoinRequestController::class, 'teamRequests']);
+
+        Route::post('join-requests/{id}/accept', [JoinRequestController::class, 'accept'])->whereNumber('id');
+        Route::post('join-requests/{id}/reject', [JoinRequestController::class, 'reject'])->whereNumber('id');
+        Route::delete('join-requests/{id}', [JoinRequestController::class, 'cancel'])->whereNumber('id');
     });
 });

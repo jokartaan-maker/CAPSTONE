@@ -57,4 +57,19 @@ class Student extends Authenticatable
     {
         return $this->teamMemberships()->where('academic_term_id', $termId)->first();
     }
+
+    public function joinRequests(): HasMany
+    {
+        return $this->hasMany(JoinRequest::class);
+    }
+
+    // الفريق الذي يقوده الطالب في فصل معيّن، أو null إن لم يكن قائداً
+    public function ledTeamInTerm(int $termId): ?Team
+    {
+        return $this->teamMemberships()
+            ->where('academic_term_id', $termId)
+            ->where('role', 'leader')
+            ->first()
+            ?->team;
+    }
 }

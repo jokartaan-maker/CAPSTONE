@@ -14,6 +14,7 @@ class DatabaseSeeder extends Seeder
             SupervisorSeeder::class,     // قبل الأفكار: كل فكرة معتمدة لها مشرف
             IdeaSeeder::class,
             TeamSeeder::class,           // بعد الأفكار: كل فريق على فكرة
+            JoinRequestSeeder::class,    // بعد الفرق: طلبات ودعوات تجريبية
         ]);
     }
 }
