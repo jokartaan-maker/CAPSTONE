@@ -9,6 +9,7 @@ use App\Http\Controllers\Api\Student\MyTeamController;
 use App\Http\Controllers\Api\Student\PasswordResetController;
 use App\Http\Controllers\Api\Student\ProfileController;
 use App\Http\Controllers\Api\Student\SupervisorController;
+use App\Http\Controllers\Api\Student\TaskController;
 use App\Http\Controllers\Api\Student\TeamController;
 
 Route::get('/user', function (Request $request) {
@@ -76,5 +77,12 @@ Route::prefix('student')->group(function () {
         Route::post('team/leave', [MyTeamController::class, 'leave']);
         Route::delete('team/members/{studentId}', [MyTeamController::class, 'removeMember'])->whereNumber('studentId');
         Route::post('team/transfer-leadership', [MyTeamController::class, 'transferLeadership']);
+
+        // المهام
+        Route::get('team/tasks', [TaskController::class, 'index']);
+        Route::post('team/tasks', [TaskController::class, 'store'])->middleware('throttle:30,1');
+        Route::patch('team/tasks/{id}', [TaskController::class, 'update'])->whereNumber('id');
+        Route::patch('team/tasks/{id}/status', [TaskController::class, 'updateStatus'])->whereNumber('id');
+        Route::delete('team/tasks/{id}', [TaskController::class, 'destroy'])->whereNumber('id');
     });
 });

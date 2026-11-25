@@ -54,6 +54,11 @@ class Team extends Model
         return $this->hasMany(JoinRequest::class);
     }
 
+    public function tasks(): HasMany
+    {
+        return $this->hasMany(Task::class);
+    }
+
     public function leader(): HasOne
     {
         return $this->hasOne(TeamMember::class)->where('role', 'leader');
@@ -87,6 +92,14 @@ class Team extends Model
     public function freeSeats(): int
     {
         return max(0, $this->capacity - $this->members()->count());
+    }
+
+    // نسبة الإنجاز: المهام المنجزة ÷ كل المهام (0 إذا لا توجد مهام)
+    public function progress(): int
+    {
+        $total = $this->tasks()->count();
+
+        return $total === 0 ? 0 : (int) round($this->tasks()->where('status', 'done')->count() * 100 / $total);
     }
 
     // حالة الفريق كما يراها طالب معيّن: your_team / full / open

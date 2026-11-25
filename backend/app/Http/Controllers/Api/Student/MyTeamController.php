@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Student\TransferLeadershipRequest;
 use App\Http\Resources\Student\MyTeamResource;
 use App\Models\AcademicTerm;
+use App\Models\Task;
 use App\Models\Team;
 use App\Models\TeamMember;
 use Illuminate\Http\JsonResponse;
@@ -52,6 +53,7 @@ class MyTeamController extends Controller
 
             // عضو عادي ← يغادر مباشرة
             if ($membership->role === 'member') {
+                $this->unassignTasks($membership);
                 $membership->delete();
                 return ['left', $team->name];
             }
@@ -98,6 +100,7 @@ class MyTeamController extends Controller
             return $this->notFound('هذا الطالب ليس عضواً في فريقك');
         }
 
+        $this->unassignTasks($target);
         $target->delete();
 
         return response()->json([
@@ -146,6 +149,14 @@ class MyTeamController extends Controller
     }
 
     // ---------- دوال مساعدة ----------
+
+    // مهام العضو المغادر/المُزال تبقى بلا مسؤول حتى يعيد القائد إسنادها
+    private function unassignTasks(TeamMember $member): void
+    {
+        Task::where('team_id', $member->team_id)
+            ->where('assigned_to', $member->student_id)
+            ->update(['assigned_to' => null]);
+    }
 
     // عضوية الطالب الحالي في الفصل الحالي
     private function myMembership(Request $request): ?TeamMember

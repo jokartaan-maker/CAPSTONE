@@ -15,6 +15,7 @@ class DatabaseSeeder extends Seeder
             IdeaSeeder::class,
             TeamSeeder::class,           // بعد الأفكار: كل فريق على فكرة
             JoinRequestSeeder::class,    // بعد الفرق: طلبات ودعوات تجريبية
+            TaskSeeder::class,           // بعد الفرق: مهام تجريبية
         ]);
     }
 }
