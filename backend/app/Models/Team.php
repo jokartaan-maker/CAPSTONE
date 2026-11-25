@@ -49,6 +49,11 @@ class Team extends Model
         return $this->hasMany(TeamMember::class)->orderByRaw("role = 'leader' desc")->orderBy('joined_at');
     }
 
+    public function joinRequests(): HasMany
+    {
+        return $this->hasMany(JoinRequest::class);
+    }
+
     public function leader(): HasOne
     {
         return $this->hasOne(TeamMember::class)->where('role', 'leader');
@@ -73,6 +78,16 @@ class Team extends Model
     }
 
     // ---------- دوال مساعدة ----------
+
+    public function isFull(): bool
+    {
+        return $this->members()->count() >= $this->capacity;
+    }
+
+    public function freeSeats(): int
+    {
+        return max(0, $this->capacity - $this->members()->count());
+    }
 
     // حالة الفريق كما يراها طالب معيّن: your_team / full / open
     // تعتمد على members المحمّلة مسبقاً، فلا تنفّذ استعلاماً إضافياً
