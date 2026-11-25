@@ -3,6 +3,7 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\Student\AuthController;
+use App\Http\Controllers\Api\Student\DeadlineController;
 use App\Http\Controllers\Api\Student\IdeaController;
 use App\Http\Controllers\Api\Student\JoinRequestController;
 use App\Http\Controllers\Api\Student\MyTeamController;
@@ -84,5 +85,12 @@ Route::prefix('student')->group(function () {
         Route::patch('team/tasks/{id}', [TaskController::class, 'update'])->whereNumber('id');
         Route::patch('team/tasks/{id}/status', [TaskController::class, 'updateStatus'])->whereNumber('id');
         Route::delete('team/tasks/{id}', [TaskController::class, 'destroy'])->whereNumber('id');
+
+        // المواعيد والتسليمات
+        Route::get('deadlines', [DeadlineController::class, 'index']);
+        Route::get('deadlines/{id}', [DeadlineController::class, 'show'])->whereNumber('id');
+        Route::post('deadlines/{id}/submissions', [DeadlineController::class, 'submit'])
+            ->whereNumber('id')->middleware('throttle:10,1');
+        Route::get('submissions/{id}/download', [DeadlineController::class, 'download'])->whereNumber('id');
     });
 });

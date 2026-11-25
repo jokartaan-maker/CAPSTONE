@@ -59,6 +59,11 @@ class Team extends Model
         return $this->hasMany(Task::class);
     }
 
+    public function submissions(): HasMany
+    {
+        return $this->hasMany(Submission::class);
+    }
+
     public function leader(): HasOne
     {
         return $this->hasOne(TeamMember::class)->where('role', 'leader');
