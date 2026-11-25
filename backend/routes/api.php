@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\Student\AuthController;
 use App\Http\Controllers\Api\Student\IdeaController;
 use App\Http\Controllers\Api\Student\JoinRequestController;
+use App\Http\Controllers\Api\Student\MyTeamController;
 use App\Http\Controllers\Api\Student\PasswordResetController;
 use App\Http\Controllers\Api\Student\ProfileController;
 use App\Http\Controllers\Api\Student\SupervisorController;
@@ -69,5 +70,11 @@ Route::prefix('student')->group(function () {
         Route::post('join-requests/{id}/accept', [JoinRequestController::class, 'accept'])->whereNumber('id');
         Route::post('join-requests/{id}/reject', [JoinRequestController::class, 'reject'])->whereNumber('id');
         Route::delete('join-requests/{id}', [JoinRequestController::class, 'cancel'])->whereNumber('id');
+
+        // فريقي
+        Route::get('my-team', [MyTeamController::class, 'show']);
+        Route::post('team/leave', [MyTeamController::class, 'leave']);
+        Route::delete('team/members/{studentId}', [MyTeamController::class, 'removeMember'])->whereNumber('studentId');
+        Route::post('team/transfer-leadership', [MyTeamController::class, 'transferLeadership']);
     });
 });
