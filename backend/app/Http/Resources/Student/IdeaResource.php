@@ -22,7 +22,16 @@ class IdeaResource extends JsonResource
                 ? $this->supervisor->academicTitleLabel() . ' — ' . $this->supervisor->specialization
                 : null,
             'tags'             => $this->tags ?? [],
-            'teams'            => [],   // تُملأ في فكرة الفرق
+            // فريق واحد كحد أقصى لكل فكرة، والواجهة تتوقع مصفوفة
+            'teams'            => $this->relationLoaded('team') && $this->team
+                ? [[
+                    'id'       => $this->team->id,
+                    'name'     => $this->team->name,
+                    'status'   => $this->team->statusFor($request->user()),
+                    'members'  => $this->team->members->count(),
+                    'capacity' => $this->team->capacity,
+                ]]
+                : [],
             'description'      => $this->description,
             'problem'          => $this->problem,
             'features'         => $this->features ?? [],

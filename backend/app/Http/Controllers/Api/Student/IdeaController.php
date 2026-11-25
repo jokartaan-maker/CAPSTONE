@@ -25,7 +25,7 @@ class IdeaController extends Controller
         $ideas = Idea::query()
             ->approved()
             ->inCurrentTerm()
-            ->with(['supervisor', 'academicTerm'])   // تحميل مسبق: يمنع استعلاماً لكل فكرة
+            ->with(['supervisor', 'academicTerm', 'team.members'])   // تحميل مسبق: يمنع استعلاماً لكل فكرة
             ->when($filters['search'] ?? null, function ($query, $search) {
                 $query->where(function ($q) use ($search) {
                     $q->where('title', 'like', "%{$search}%")
@@ -55,7 +55,7 @@ class IdeaController extends Controller
                 $q->where(fn ($q) => $q->approved()->inCurrentTerm())
                   ->orWhere('proposed_by_student_id', $studentId);
             })
-            ->with(['supervisor', 'academicTerm'])
+            ->with(['supervisor', 'academicTerm', 'team.members'])
             ->find($id);
 
         if (! $idea) {
@@ -121,7 +121,7 @@ class IdeaController extends Controller
             return $idea;
         });
 
-        $idea->load(['supervisor', 'academicTerm']);
+        $idea->load(['supervisor', 'academicTerm', 'team.members']);
 
         return response()->json([
             'message' => 'تم إرسال الفكرة بنجاح، وهي الآن قيد المراجعة من اللجنة العلمية',
@@ -135,7 +135,7 @@ class IdeaController extends Controller
     {
         $ideas = Idea::query()
             ->where('proposed_by_student_id', $request->user()->id)
-            ->with(['supervisor', 'academicTerm'])
+            ->with(['supervisor', 'academicTerm', 'team.members'])
             ->latest()
             ->get();
 

@@ -7,6 +7,7 @@ use App\Http\Controllers\Api\Student\IdeaController;
 use App\Http\Controllers\Api\Student\PasswordResetController;
 use App\Http\Controllers\Api\Student\ProfileController;
 use App\Http\Controllers\Api\Student\SupervisorController;
+use App\Http\Controllers\Api\Student\TeamController;
 
 Route::get('/user', function (Request $request) {
     return $request->user();
@@ -50,5 +51,9 @@ Route::prefix('student')->group(function () {
         Route::get('supervisors', [SupervisorController::class, 'index']);
         Route::post('ideas', [IdeaController::class, 'store'])->middleware('throttle:10,1');
         Route::get('my-ideas', [IdeaController::class, 'myIdeas']);
+
+        // الفرق
+        Route::get('teams/explore', [TeamController::class, 'explore']);
+        Route::post('teams', [TeamController::class, 'store'])->middleware('throttle:10,1');
     });
 });

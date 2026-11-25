@@ -13,6 +13,7 @@ class DatabaseSeeder extends Seeder
             AcademicTermSeeder::class,   // قبل الأفكار: كل فكرة تحتاج فصلاً
             SupervisorSeeder::class,     // قبل الأفكار: كل فكرة معتمدة لها مشرف
             IdeaSeeder::class,
+            TeamSeeder::class,           // بعد الأفكار: كل فريق على فكرة
         ]);
     }
 }

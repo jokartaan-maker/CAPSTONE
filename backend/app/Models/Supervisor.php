@@ -49,4 +49,15 @@ class Supervisor extends Authenticatable
     {
         return $this->hasMany(Idea::class);
     }
+
+    public function teams(): HasMany
+    {
+        return $this->hasMany(Team::class);
+    }
+
+    // عدد فرق المشرف في فصل معيّن (للتحقق من max_teams)
+    public function teamsCountInTerm(int $termId): int
+    {
+        return $this->teams()->where('academic_term_id', $termId)->count();
+    }
 }

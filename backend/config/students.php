@@ -17,6 +17,9 @@ return [
     // أقصى عدد للمهارات
     'max_skills' => 10,
 
+    // أقصى عدد أعضاء في الفريق (مع القائد)
+    'team_capacity' => 4,
+
     // رابط صفحة "كلمة مرور جديدة" في واجهة React
     'reset_password_url' => env('FRONTEND_URL', 'http://localhost:5173') . '/student/reset-password',
 
