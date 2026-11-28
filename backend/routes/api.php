@@ -3,9 +3,15 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\Student\AuthController;
+use App\Http\Controllers\Api\Student\DeadlineController;
 use App\Http\Controllers\Api\Student\IdeaController;
+use App\Http\Controllers\Api\Student\JoinRequestController;
+use App\Http\Controllers\Api\Student\MyTeamController;
 use App\Http\Controllers\Api\Student\PasswordResetController;
 use App\Http\Controllers\Api\Student\ProfileController;
+use App\Http\Controllers\Api\Student\SupervisorController;
+use App\Http\Controllers\Api\Student\TaskController;
+use App\Http\Controllers\Api\Student\TeamController;
 
 Route::get('/user', function (Request $request) {
     return $request->user();
@@ -44,5 +50,47 @@ Route::prefix('student')->group(function () {
         // بنك الأفكار
         Route::get('ideas', [IdeaController::class, 'index']);
         Route::get('ideas/{id}', [IdeaController::class, 'show'])->whereNumber('id');
+
+        // اقتراح فكرة
+        Route::get('supervisors', [SupervisorController::class, 'index']);
+        Route::post('ideas', [IdeaController::class, 'store'])->middleware('throttle:10,1');
+        Route::get('my-ideas', [IdeaController::class, 'myIdeas']);
+
+        // الفرق
+        Route::get('teams/explore', [TeamController::class, 'explore']);
+        Route::post('teams', [TeamController::class, 'store'])->middleware('throttle:10,1');
+
+        // طلبات الانضمام والدعوات
+        Route::post('teams/{id}/join-requests', [JoinRequestController::class, 'send'])
+            ->whereNumber('id')->middleware('throttle:10,1');
+        Route::get('my-join-requests', [JoinRequestController::class, 'mine']);
+
+        Route::get('students/available', [JoinRequestController::class, 'availableStudents']);
+        Route::post('team/invitations', [JoinRequestController::class, 'invite'])->middleware('throttle:10,1');
+        Route::get('team/join-requests', [JoinRequestController::class, 'teamRequests']);
+
+        Route::post('join-requests/{id}/accept', [JoinRequestController::class, 'accept'])->whereNumber('id');
+        Route::post('join-requests/{id}/reject', [JoinRequestController::class, 'reject'])->whereNumber('id');
+        Route::delete('join-requests/{id}', [JoinRequestController::class, 'cancel'])->whereNumber('id');
+
+        // فريقي
+        Route::get('my-team', [MyTeamController::class, 'show']);
+        Route::post('team/leave', [MyTeamController::class, 'leave']);
+        Route::delete('team/members/{studentId}', [MyTeamController::class, 'removeMember'])->whereNumber('studentId');
+        Route::post('team/transfer-leadership', [MyTeamController::class, 'transferLeadership']);
+
+        // المهام
+        Route::get('team/tasks', [TaskController::class, 'index']);
+        Route::post('team/tasks', [TaskController::class, 'store'])->middleware('throttle:30,1');
+        Route::patch('team/tasks/{id}', [TaskController::class, 'update'])->whereNumber('id');
+        Route::patch('team/tasks/{id}/status', [TaskController::class, 'updateStatus'])->whereNumber('id');
+        Route::delete('team/tasks/{id}', [TaskController::class, 'destroy'])->whereNumber('id');
+
+        // المواعيد والتسليمات
+        Route::get('deadlines', [DeadlineController::class, 'index']);
+        Route::get('deadlines/{id}', [DeadlineController::class, 'show'])->whereNumber('id');
+        Route::post('deadlines/{id}/submissions', [DeadlineController::class, 'submit'])
+            ->whereNumber('id')->middleware('throttle:10,1');
+        Route::get('submissions/{id}/download', [DeadlineController::class, 'download'])->whereNumber('id');
     });
 });

@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class Idea extends Model
 {
@@ -21,6 +22,7 @@ class Idea extends Model
         'status',
         'academic_term_id',
         'supervisor_id',
+        'proposed_by_student_id',
         'approved_at',
     ];
 
@@ -45,6 +47,18 @@ class Idea extends Model
     public function supervisor(): BelongsTo
     {
         return $this->belongsTo(Supervisor::class);
+    }
+
+    // الطالب الذي اقترح الفكرة
+    public function proposedBy(): BelongsTo
+    {
+        return $this->belongsTo(Student::class, 'proposed_by_student_id');
+    }
+
+    // الفريق الذي يعمل على الفكرة (فريق واحد فقط لكل فكرة)
+    public function team(): HasOne
+    {
+        return $this->hasOne(Team::class);
     }
 
     // ---------- Scopes (شروط جاهزة للاستعلام) ----------

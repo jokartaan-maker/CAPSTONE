@@ -17,6 +17,16 @@ return [
     // أقصى عدد للمهارات
     'max_skills' => 10,
 
+    // أقصى عدد أعضاء في الفريق (مع القائد)
+    'team_capacity' => 4,
+
+    // أقصى عدد طلبات انضمام معلّقة للطالب في نفس الوقت
+    'max_pending_join_requests' => 3,
+
+    // ملفات التسليم: الأنواع المسموحة والحجم الأقصى (KB)
+    'submission_extensions' => ['pdf', 'docx', 'pptx', 'zip'],
+    'submission_max_kb'     => 20480,   // 20 MB
+
     // رابط صفحة "كلمة مرور جديدة" في واجهة React
     'reset_password_url' => env('FRONTEND_URL', 'http://localhost:5173') . '/student/reset-password',
 
