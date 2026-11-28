@@ -155,22 +155,42 @@ export interface IdeaTeam {
   capacity: number
 }
 
+/** مطابق لـ IdeaResource في الـ Backend */
 export interface Idea {
-  id: number
-  code: string              // e.g. IDEA-024
-  title: string
-  field: string             // e.g. هندسة البرمجيات
-  status: IdeaStatus
-  supervisor: string        // اسم المشرف
-  supervisor_email?: string
-  supervisor_title?: string // اللقب العلمي
-  tags: string[]            // e.g. ['React', 'Node.js']
-  teams: IdeaTeam[]
-  description: string
-  problem: string
-  features: string[]
-  requirements: string[]
-  tech_stack: string[]
-  approved_at?: string      // تاريخ الاعتماد
-  approved_by?: string      // اعتمدها
+  id:                number
+  code:              string        // e.g. IDEA-001
+  title:             string
+  field:             string        // e.g. هندسة البرمجيات
+  status:            IdeaStatus
+  supervisor:        string | null // اسم المشرف
+  supervisor_email:  string | null
+  supervisor_title:  string | null // اللقب العلمي والتخصص
+  tags:              string[]
+  teams:             IdeaTeam[]    // يُملأ لاحقاً مع ميزة الفرق
+  description:       string
+  problem:           string | null
+  features:          string[]
+  requirements:      string[]
+  tech_stack:        string[]
+  approved_at:       string | null // YYYY-MM-DD
+  approved_by:       string | null // 'اللجنة العلمية'
+  academic_term:     string | null // اسم الفصل الدراسي
+}
+
+/** فلاتر GET /student/ideas */
+export interface IdeaFilters {
+  search?:        string
+  field?:         string
+  supervisor_id?: number
+}
+
+/** استجابة GET /student/ideas */
+export interface IdeasResponse {
+  ideas: Idea[]
+  total: number
+}
+
+/** استجابة GET /student/ideas/{id} */
+export interface IdeaDetailResponse {
+  idea: Idea
 }

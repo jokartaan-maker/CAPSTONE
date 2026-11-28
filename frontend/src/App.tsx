@@ -40,6 +40,7 @@ export function App() {
           <Route path="/student/account"          element={<AccountPage />} />
           <Route path="/student/ideas"            element={<IdeasPage />} />
           <Route path="/student/ideas/:id"        element={<IdeaDetailPage />} />
+          <Route path="/student/my-ideas"         element={<NotFoundPage />} />
         </Route>
       </Route>
 

@@ -3,45 +3,30 @@ import { useAuth } from '../../context/AuthContext'
 import { CapstoneLogotype } from '../../components/ui/CapstoneLogotype'
 import './DashboardLayout.css'
 
-import {
-  iconBuilding,
-  iconInfo,
-  iconPersonSearch,
-  iconPersons,
-  iconGradCap,
-  iconMonitor,
-  iconShieldCheck,
-  iconPerson,
-  iconHelp,
-} from '../../assets/icons/index'
-
-const NavIco = ({ src }: { src: string }) => (
-  <img src={src} alt="" className="ds-nav-icon" />
-)
-
 const NAV_SECTIONS = [
   {
     title: null,
     links: [
-      { to: '/student/dashboard', end: true,  icon: iconBuilding,    label: 'نظرة عامة' },
+      { to: '/student/dashboard', end: true, label: 'نظرة عامة' },
     ],
   },
   {
     title: 'المشروع',
     links: [
-      { to: '/student/ideas',            icon: iconInfo,         label: 'بنك الأفكار'       },
-      { to: '/student/teams/explore',    icon: iconPersonSearch, label: 'استكشاف الفرق'      },
-      { to: '/student/my-team',          icon: iconPersons,      label: 'فريقي'              },
-      { to: '/student/join-requests',    icon: iconGradCap,      label: 'طلبات الانضمام'     },
-      { to: '/student/team/tasks',       icon: iconMonitor,      label: 'مهام الفريق'        },
-      { to: '/student/reports',          icon: iconShieldCheck,  label: 'التقارير والملفات'  },
-      { to: '/student/supervisor-notes', icon: iconPerson,       label: 'ملاحظات المشرف'     },
+      { to: '/student/ideas',            label: 'بنك الأفكار'      },
+      { to: '/student/my-ideas',         label: 'أفكاري'            },
+      { to: '/student/teams/explore',    label: 'استكشاف الفرق'     },
+      { to: '/student/my-team',          label: 'فريقي'             },
+      { to: '/student/join-requests',    label: 'طلبات الانضمام'    },
+      { to: '/student/team/tasks',       label: 'مهام الفريق'       },
+      { to: '/student/reports',          label: 'التقارير والملفات' },
+      { to: '/student/supervisor-notes', label: 'ملاحظات المشرف'    },
     ],
   },
   {
     title: 'الحساب',
     links: [
-      { to: '/student/account', icon: iconHelp, label: 'حسابي والإشعارات' },
+      { to: '/student/account', label: 'حسابي والإشعارات' },
     ],
   },
 ]
@@ -86,7 +71,6 @@ export function DashboardLayout() {
                     'ds-nav-link' + (isActive ? ' active' : '')
                   }
                 >
-                  <NavIco src={link.icon} />
                   <span>{link.label}</span>
                 </NavLink>
               ))}
